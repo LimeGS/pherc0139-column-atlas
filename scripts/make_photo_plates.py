@@ -1,12 +1,27 @@
 #!/usr/bin/env python3
-"""Regenerate the publication-style plates (papyrus texture + ink in black).
+"""Regenerate the publication-style plates (papyrus texture + ink composited).
 
 Same reading order and same official ds8 ink maps as make_plates.py, but
-instead of showing the ink map white-on-black, this composites it the way
-the paper's Fig. 4 panel b does: the CT surface texture as a light papyrus
-background with the ink prediction painted BLACK on top.
+instead of showing the ink map white-on-black, this composites it onto the
+CT surface texture as a light papyrus background. Two recipes, sharing one
+texture fetch per wrap:
 
-    out = paper_texture * (1 - ALPHA * ink)
+    plates_photo/  out = paper_texture * (1 - ALPHA * ink)            (ours)
+    plates_villa/  out = tint*opacity + paper*(1-opacity), opacity =
+                   smoothstep(ink, VILLA_OPACITY_LO, VILLA_OPACITY_HI)
+                   * VILLA_OPACITY_SCALE                 (verified villa recipe)
+
+plates_photo is our own approximation, in the visual spirit of the paper's
+Fig. 4 panel b ("ink-enhanced signal shown in black against the papyrus
+texture") but not a byte-verified match to it -- no formula is published in
+the paper. plates_villa reproduces, byte-for-byte against the published
+config, the ink-bake recipe in ScrollPrize/villa's
+foundation/scroll-unwrap-pipeline (docs/RENDER-STYLE.md, configs/global.yaml
+`[ink]`): tint (16,16,16) neutral carbon black, opacity_lo=0.42,
+opacity_hi=0.78, opacity_scale=0.88, no glow. That pipeline composites onto
+its own mesh-rendered RGBA texture, which we don't have access to here, so
+plates_villa still uses our same zarr-slice papyrus background as the base
+-- the ink formula is verified, the base texture is still an approximation.
 
 The texture is the segment's surface-volume zarr (level-3 multiscale,
 mid-depth slice). Those chunks are raw uint8 with no compressor, so we pull
@@ -14,7 +29,8 @@ only the three mid layers of each chunk with HTTP Range requests rather
 than downloading the whole volume.
 
 Usage:
-    python scripts/make_photo_plates.py [--out plates_photo] [--work work_maps]
+    python scripts/make_photo_plates.py [--out plates_photo]
+        [--out-villa plates_villa] [--work work_maps]
 
 Requires: numpy, pillow, boto3.
 """
@@ -38,6 +54,15 @@ from vesuvius_data import ls, download  # noqa: E402
 
 BUCKET = "vesuvius-challenge-open-data"
 ALPHA = 0.88
+# Real villa ink-bake recipe (verified byte-for-byte, 2026-07-13, against
+# ScrollPrize/villa foundation/scroll-unwrap-pipeline docs/RENDER-STYLE.md +
+# configs/global.yaml [ink]): opacity = smoothstep(ink, lo, hi) * scale,
+# composited as tint*opacity + base*(1-opacity). Tint is neutral carbon
+# black, never crushed to pure #000.
+VILLA_OPACITY_LO = 0.42
+VILLA_OPACITY_HI = 0.78
+VILLA_OPACITY_SCALE = 0.88
+VILLA_TINT = 16.0  # (16,16,16) = #101010; single channel, base is achromatic
 # Every segmented wrap in physical reading order (outer -> inner, w059 -> w023;
 # rho=0.9993 vs radius), with the title (subscriptio, innermost) last as control.
 READING = ["w059", "w058", "w057", "w056", "w055", "w054", "w053", "w052",
@@ -45,6 +70,11 @@ READING = ["w059", "w058", "w057", "w056", "w055", "w054", "w053", "w052",
            "w043", "w042", "w041", "w040", "w039", "w038", "w037", "w036",
            "w035", "w034", "w033", "w032", "w031", "w030", "w029", "w028",
            "w027", "w026", "w025", "w024", "w023", "title"]
+
+
+def smoothstep(x, lo, hi):
+    t = np.clip((x - lo) / (hi - lo), 0, 1)
+    return t * t * (3 - 2 * t)
 
 
 def fetch_texture(cli, seg, work):
@@ -88,9 +118,11 @@ def fetch_texture(cli, seg, work):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", default="plates_photo")
+    ap.add_argument("--out-villa", default="plates_villa")
     ap.add_argument("--work", default="work_maps")
     args = ap.parse_args()
     os.makedirs(args.out, exist_ok=True)
+    os.makedirs(args.out_villa, exist_ok=True)
     os.makedirs(args.work, exist_ok=True)
     cli = boto3.client("s3", region_name="us-east-1",
                        config=Config(signature_version=UNSIGNED, max_pool_connections=32))
@@ -115,10 +147,19 @@ def main():
         valid = tex > 1
         lo, hi = np.percentile(tex[valid], [2, 98]) if valid.any() else (0, 255)
         paper = 105 + np.clip((tex - lo) / max(hi - lo, 1), 0, 1) * 135
-        comp = paper * (1 - ALPHA * np.clip(ink / 255.0, 0, 1))
+        ink01 = np.clip(ink / 255.0, 0, 1)
+
+        comp = paper * (1 - ALPHA * ink01)
         comp[~valid] = 246
         Image.fromarray(np.clip(comp, 0, 255).astype(np.uint8)).save(
             f"{args.out}/{i+1:02d}_{w}_photo.png", optimize=True)
+
+        opacity = smoothstep(ink01, VILLA_OPACITY_LO, VILLA_OPACITY_HI) * VILLA_OPACITY_SCALE
+        villa = VILLA_TINT * opacity + paper * (1 - opacity)
+        villa[~valid] = 246
+        Image.fromarray(np.clip(villa, 0, 255).astype(np.uint8)).save(
+            f"{args.out_villa}/{i+1:02d}_{w}_villa.png", optimize=True)
+
         print(f"{i+1:02d} {w} <- {seg}")
 
 

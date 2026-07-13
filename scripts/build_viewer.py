@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """Rebuild viewer/index.html from the plates + the human review.
 
-Reads the full-resolution plates (plates/ ink, plates_photo/ composite), the
-human window review (data/review_0139_human.json for the >=0.9 pass, plus
+Reads the full-resolution plates (plates/ ink, plates_photo/ and
+plates_villa/ composites), the human window review
+(data/review_0139_human.json for the >=0.9 pass, plus
 data/review_band_0139.json for the relaxed 0.6-0.9 pass if present) and the
 wrap geometry (data/wrap_radial.json), and regenerates the single-file viewer:
 
   - one PLATES[] entry per segmented wrap, in physical reading order
     (outer -> inner, w059 -> w023, title last as control);
-  - each entry carries a downscaled (1300px wide) data-URI for both styles:
-    `uri` = the ds8 ink map with the AMBER boxes of the human-confirmed
-    (rating==1) windows baked in; `uri_photo` = the papyrus composite, no boxes;
+  - each entry carries a downscaled (1300px wide) data-URI for all three
+    styles: `uri` = the ds8 ink map with the AMBER boxes of the
+    human-confirmed (rating==1) windows baked in; `uri_photo` = our papyrus
+    composite approximation, no boxes; `uri_villa` = the verified villa
+    ink-bake recipe on the same papyrus base, no boxes;
   - per-wrap metadata: n_clear (# rating==1 windows), max_score, radius.
     A wrap with no confirmed windows is shown "not yet human-reviewed".
 
@@ -115,13 +118,16 @@ def main():
         photo = Image.open(os.path.join(ROOT, "plates_photo", f"{i:02d}_{w}_photo.png"))
         uri_photo = data_uri(photo.resize((DISP_W, disp_h), Image.LANCZOS), "L")
 
+        villa = Image.open(os.path.join(ROOT, "plates_villa", f"{i:02d}_{w}_villa.png"))
+        uri_villa = data_uri(villa.resize((DISP_W, disp_h), Image.LANCZOS), "L")
+
         nc = agg[w]["n_clear"]
         plates.append({
             "pos": i, "wrap": w, "seg": seg, "r_mm": r_by_w[w],
             "n_clear": nc, "reviewed": w in reviewed,
             "max_score": round(agg[w]["max_score"], 4) if nc > 0 else None,
             "uri": uri, "size_px": [W, H], "reading": prev.get(w, ""),
-            "uri_photo": uri_photo,
+            "uri_photo": uri_photo, "uri_villa": uri_villa,
         })
         print(f"{i:02d} {w:6s} {W}x{H} n_clear={nc} "
               f"boxes={len(agg[w]['boxes'])} max={plates[-1]['max_score']}")

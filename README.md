@@ -78,27 +78,42 @@ reading order is x ascending. The exact wrap-to-wrap seam position (where
 one turn's text ends and the next begins) is not modeled; it does not
 affect the relative order of anything shown.
 
-### 4. The plates (two styles)
+### 4. The plates (three styles)
 
-Two renderings of each column, toggled in the viewer:
+Three renderings of each column, toggled in the viewer:
 
 - **`plates/` — pure ink maps.** The official ds8 ink-detection maps
   (~18 µm/px), contrast-stretched to the 2-98 percentile band, ink white
   on black. Nothing else: no denoising, no content edits, no resampling.
   The viewer overlays amber boxes on the reviewed windows; the PNGs are
   clean.
-- **`plates_photo/` — publication-style composites.** Papyrus texture from
-  the CT surface volume (the segment's `surface-volumes` zarr, level-3
-  multiscale, mid-depth layer) as a light background, with the ink
+- **`plates_photo/` — our publication-style composite.** Papyrus texture
+  from the CT surface volume (the segment's `surface-volumes` zarr,
+  level-3 multiscale, mid-depth layer) as a light background, with the ink
   prediction composited in BLACK on top
-  (`out = paper_texture * (1 - 0.88 * ink)`). This is the same recipe as
-  the paper's Fig. 4 panel b ("ink-enhanced signal shown in black against
-  the papyrus texture"): letters read as lines of text rather than white
-  blobs. The texture is fetched with HTTP Range requests over the raw
+  (`out = paper_texture * (1 - 0.88 * ink)`). This is our own approximation,
+  in the visual spirit of the paper's Fig. 4 panel b ("ink-enhanced signal
+  shown in black against the papyrus texture") — letters read as lines of
+  text rather than white blobs — but **not** a byte-verified match to the
+  paper's own renderer: no formula for that figure is published.
+- **`plates_villa/` — the verified villa recipe.** Same papyrus base, but
+  the ink is composited with the actual ink-bake formula from
+  ScrollPrize/villa's `foundation/scroll-unwrap-pipeline`
+  (`docs/RENDER-STYLE.md` + `configs/global.yaml [ink]`, confirmed
+  byte-for-byte 2026-07-13): `opacity = smoothstep(ink, 0.42, 0.78) * 0.88`,
+  composited as `tint*opacity + paper*(1-opacity)` with a neutral carbon-black
+  tint `(16,16,16)` / `#101010`, no glow. That pipeline composites onto its
+  own mesh-rendered RGBA texture, which isn't available here, so this still
+  uses our same zarr-slice papyrus as the base — the *ink formula* is
+  verified, the *base texture* is still an approximation.
+
+  The texture is fetched with HTTP Range requests over the raw
   (uncompressed, `compressor: null`) zarr chunks so only the three mid
   layers of each chunk are downloaded, not the whole volume. Regenerate
-  with `scripts/make_photo_plates.py`, which fetches both the official ds8
-  maps and the textures from the public bucket.
+  `plates_photo/` and `plates_villa/` together with
+  `scripts/make_photo_plates.py`, which fetches the official ds8 maps and
+  the textures from the public bucket once and composites both recipes
+  from the same fetch.
 
 ## Human review behind the amber boxes
 
@@ -235,7 +250,7 @@ including more of these same wraps, is still waiting for segmentation.
 pip install numpy pillow boto3 scipy
 python scripts/wrap_order.py            # meshes -> wrap_radial.json + table (~1 GB download)
 python scripts/make_plates.py           # official ds8 maps -> plates/*.png  (all 38 wraps)
-python scripts/make_photo_plates.py     # + surface textures -> plates_photo/*.png
+python scripts/make_photo_plates.py     # + surface textures -> plates_photo/*.png, plates_villa/*.png
 python scripts/build_viewer.py          # plates + human review -> viewer/index.html
 ```
 
