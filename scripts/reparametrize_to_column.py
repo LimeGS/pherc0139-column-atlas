@@ -15,10 +15,12 @@ papyrus genuinely undulates in radius by MORE than 2mm within a single
 official wrap (real physical rippling of carbonized papyrus, not a bug).
 A radius threshold was never a sound way to separate wraps; multi-wrap
 grown patches (see data/index_s5_0139/vc_grow_pilot_20260713/) just made the
-consequence visible first. The likely-correct fix is continuity-based
-separation (native-grid adjacency + a local discontinuity/coherence check,
-close to the original VC3D grow pilot's Gate C) rather than a radius cut --
-that is unfinished work, do not attempt to patch around it with parameters.
+consequence visible first. This file is retained as a negative-result
+diagnostic, not a proposed production solution. A winding-angle prototype now
+lives in separate_wraps_by_winding.py, but it remains experimental: it has
+passed one official single-wrap control and synthetic controls, not a real
+mixed-wrap mesh. Do not use either script as evidence of end-to-end multi-wrap
+recovery.
 
 WHAT IS VALIDATED AND REUSABLE:
   - load_axis/perpendicular_frame/point_coords: correct scroll-relative
@@ -300,12 +302,11 @@ axial extent, non-blank), BUT there is a KNOWN, VERIFIED LIMITATION:
   -- this part is genuinely useful for other tasks), and the griddata-based
   interpolation utility.
 
-  What is NOT solved: isolating "one physical wrap" from a mesh that mixes
-  several. The correct approach is almost certainly continuity-based (using
-  native-grid adjacency + a local discontinuity/coherence check, similar to
-  the Gate C checks in the original VC3D grow pilot) rather than a global
-  radius threshold -- that is real, unfinished engineering work, not a
-  parameter to tune.
+  What is NOT solved here: isolating "one physical wrap" from a mesh that
+  mixes several. Radius thresholding is falsified by this control. The
+  winding-angle prototype in separate_wraps_by_winding.py is the next
+  experimental hypothesis, not a validated replacement; real mixed-wrap
+  evaluation remains unfinished engineering work, not a parameter to tune.
 """)
 
 

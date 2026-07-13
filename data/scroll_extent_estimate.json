@@ -1,0 +1,58 @@
+{
+  "purpose": "assumption-explicit length model; not a complete-scroll measurement",
+  "source": "data/wrap_radial.json",
+  "voxel_size_um": 2.399,
+  "atlas_body_wrap_count": 37,
+  "atlas_body_circumference_sum_m": 2.364,
+  "assumptions": {
+    "outer_radius_mm": [
+      25.0,
+      30.0
+    ],
+    "core_radius_mm": [
+      3.0,
+      5.0
+    ],
+    "pitch_mm_per_turn": 0.17,
+    "length_formula": "sum(2*pi*(core_radius_mm + i*pitch_mm_per_turn))"
+  },
+  "models": [
+    {
+      "outer_radius_mm": 25.0,
+      "core_radius_mm": 3.0,
+      "pitch_mm_per_turn": 0.17,
+      "modeled_wraps": 129,
+      "modeled_length_m": 11.25,
+      "atlas_body_length_fraction": 0.2101
+    },
+    {
+      "outer_radius_mm": 25.0,
+      "core_radius_mm": 5.0,
+      "pitch_mm_per_turn": 0.17,
+      "modeled_wraps": 118,
+      "modeled_length_m": 11.08,
+      "atlas_body_length_fraction": 0.2134
+    },
+    {
+      "outer_radius_mm": 30.0,
+      "core_radius_mm": 3.0,
+      "pitch_mm_per_turn": 0.17,
+      "modeled_wraps": 159,
+      "modeled_length_m": 16.414,
+      "atlas_body_length_fraction": 0.144
+    },
+    {
+      "outer_radius_mm": 30.0,
+      "core_radius_mm": 5.0,
+      "pitch_mm_per_turn": 0.17,
+      "modeled_wraps": 147,
+      "modeled_length_m": 16.08,
+      "atlas_body_length_fraction": 0.147
+    }
+  ],
+  "limits": [
+    "No per-mesh area is computed here.",
+    "No total surface fraction is inferred here.",
+    "Whole-scroll radii and pitch are assumptions, not observations from every wrap."
+  ]
+}

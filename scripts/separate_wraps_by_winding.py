@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Separate a mesh into individual physical "wraps" by CUMULATIVE WINDING ANGLE
-about the scroll axis -- the correct generalization of what makes an official
-wNNN segment ONE segment -- with an explicit WINDABILITY GATE that refuses to
-run when the mesh does not actually wind coherently around the given axis.
+"""Experimental winding-angle separation of a mesh into candidate "wraps".
 
-WHY WINDING ANGLE, NOT RADIUS (settled 2026-07-13, supersedes the radius-band
-approach in reparametrize_to_column.py):
+This is a research prototype, not a validated multi-wrap recovery method. Its
+versioned self-test covers one official single-wrap control plus synthetic
+multi-turn and invalid-geometry controls; it has not been evaluated against a
+real mixed-wrap mesh with frozen ground truth.
+
+HYPOTHESIS: WINDING ANGLE, NOT RADIUS (2026-07-13 experiment):
   A scroll is ONE continuous spiral sheet. "One wrap" is not a physically
   distinct object with a boundary -- it is a 2*pi-angular-length section of the
   continuous sheet. Official wNNN segments are just consecutive ~2*pi sections.
@@ -17,8 +18,8 @@ approach in reparametrize_to_column.py):
   PHerc0139 the papyrus undulates in radius by ~6mm peak-to-peak within a single
   wrap while the wrap PITCH is only ~0.17mm/turn -- a ~50x confound (measured
   directly on the official w043 segment's native grid; see KNOWHOW.md sec 7-8).
-  Winding angle is immune to undulation: it advances by ~2*pi per physical turn
-  regardless of radial rippling.
+  Winding angle may be less sensitive to radial undulation because it advances
+  by ~2*pi per physical turn; this is the hypothesis tested by this prototype.
 
 KEY STRUCTURAL FACT (measured): VC3D's native tifxyz (u,v) grid is ALREADY a
 flattened parametrization -- for a coherent wrap, one grid axis is ~monotonic in
@@ -39,12 +40,12 @@ both occur in real data:
       55-90 deg from the extrapolated global axis, and it stabs through them).
   (b) the sheet is warped/saddle-shaped -> no straight cylinder axis fits, so
       "winding about the axis" is ill-defined.
-  Gate metrics (thresholds calibrated so the OFFICIAL w043 wrap PASSES and every
-  axis-pierced/warped case FAILS):
+  Gate metrics (thresholds calibrated on the official w043 control and the
+  synthetic invalid control):
     minr_ratio = p1(r)/median(r)  must be > 0.30   (axis stays outside the sheet)
     resid/R    = rms(r-R)/R       must be < 0.30   (sheet is cylindrical here)
-  If the gate FAILS, this returns a clear refusal -- unlike the radius-band
-  script, which silently emitted patchy bands from meshes it could not handle.
+  If the gate FAILS, this returns a clear refusal. Passing the gate does not
+  establish correct wrap identity; that requires a real mixed-wrap benchmark.
 
 Usage:
   python scripts/separate_wraps_by_winding.py --self-test

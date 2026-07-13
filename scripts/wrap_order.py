@@ -40,7 +40,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", default="work_meshes", help="local cache dir for meshes")
     ap.add_argument("--scroll", default="PHerc0139")
-    ap.add_argument("--out", default="wrap_radial.json")
+    ap.add_argument("--out", default="data/wrap_radial.json",
+                    help="committed radial-table path (default: data/wrap_radial.json)")
     ap.add_argument("--subsample", type=int, default=20000)
     args = ap.parse_args()
 

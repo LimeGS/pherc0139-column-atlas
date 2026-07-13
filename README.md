@@ -7,7 +7,7 @@ readings published in the paper's supplement, and the already-read title
 column as a control. Built entirely from public data: the official ds8 ink
 maps and the public segment meshes.**
 
-What is formally published on PHerc 0139 (arXiv 2606.29085, 2026-06-25):
+What is formally published on PHerc 0139 (arXiv 2606.29085, submitted 2026-06-27):
 the end title ("Φιλοδήμου περὶ θεῶν Η") and, in Supplementary Fig. 1
 ("Readings from PHerc. 139"), five isolated phrase readings located by
 wrap: w49 χωρὶϲ προνο[ί]α̣ϲ̣, w25 ἀόρατα, w34 καὶ τὸ κατ̣ὰ̣ φύϲιν,
@@ -32,11 +32,14 @@ computed, per segment, the **mean radial distance of its point cloud to
 that axis** — the wrap radius.
 
 Result: **Spearman rho = 0.9993 (p = 2e-51)** between the wNNN number in
-the segment names and the measured radius. The numbering IS the physical
-radial order: w023 innermost (r = 7.02 mm) to w059 outermost (13.26 mm),
-all 37 wraps consecutive with no gaps, and the mean radial step between
-consecutive wraps is **~0.17 mm — the thickness of rolled papyrus**, an
-independent physical sanity check.
+the segment names and the measured mean radius. The official w059 → w023
+sequence is therefore strongly consistent with outer → inner radial order:
+w023 is the innermost measured body wrap (r = 7.02 mm) and w059 the
+outermost (13.26 mm), with all 37 labels consecutive. We use that official
+wrap sequence, **not a strict sort of the noisy per-wrap radius estimates**:
+there is one local inversion (w050/w049). The mean radial step is
+**~0.17 mm — the thickness of rolled papyrus**, an independent physical
+sanity check.
 
 > **Method pitfall, documented so you don't repeat it:** the radius of a
 > segment's *centroid* is useless here. Each segment is a full turn, so
@@ -180,9 +183,10 @@ transcription**.
 | 37 | w023 | 7.02 | 0 (reviewed, none clear) |
 | 38 | title | 5.50 | 2 (control — officially read) |
 
-Ordering is by wrap number (= the physical radial order, ρ=0.9993); the
-radius column is the measured per-wrap value, whose sub-0.17 mm scatter
-produces a couple of local inversions (e.g. w050 vs w049). Human review so
+Ordering follows the official wrap-number sequence, which is strongly
+geometry-consistent with radial order (ρ=0.9993). The radius column is an
+independent per-wrap estimate; its sub-0.17 mm scatter produces a local
+inversion (w050 vs w049), so it is not used as a strict sorter. Human review so
 far covers 22 of the 38 wraps: 17 with confirmed legible windows (16 body
 columns plus the title control), and 5 more looked at but with no window
 clear enough to confirm (w023/w027/w031/w032/w033). The other 16 are shown
@@ -192,24 +196,22 @@ scroll can be read in order. The densest confirmed text sits mid-band
 
 ## How much of the scroll is this?
 
-These 38 plates are **everything publicly segmented on PHerc 0139**: 38
-segments, 1,529 cm2 of mesh, ~2.4 m of papyrus by sum of 2*pi*r — 100% of
-what is segmented so far. (An earlier cut of this atlas showed only the 15
-human-reviewed wraps, 584 cm2 / ~40% of this; the plates now cover the full
-segmented set, reviewed or not.)
+The atlas contains the **38 segment IDs frozen in
+`data/wrap_radial.json` on 2026-07-13**: 37 body wraps and the title control.
+This is a reproducible snapshot of the public bucket inventory used by this
+project, not a claim that the live bucket can never gain more segments.
 
-Against the whole scroll (estimate, assumptions explicit): the scanned
-volume is 184.6 mm along the axis and 63.6 mm across. With an outer radius
-of 25-30 mm, a core of 3-5 mm and the measured 0.17 mm/wrap step, the
-scroll holds roughly 118-159 wraps and 11-16 m of papyrus. These plates
-are then **~15-22% of the papyrus length, and ~5-8% of the total
-surface**.
+The sum of the 37 body-wrap circumferences is **2.36 m** (2.40 m if the title
+control is included). `scripts/estimate_extent.py` recomputes this number
+from the committed radial data and writes an assumption-explicit range for a
+whole-scroll model: 118–159 wraps and 11.1–16.4 m, using a 25–30 mm outer
+radius, 3–5 mm core and 0.17 mm pitch. That places the body-wrap circumference
+sum at approximately **14–21% of modeled total papyrus length**.
 
-One more honest number: the segments only span a **52 mm axial band of the
-184.6 mm volume (~28% of the axis)**. If papyrus occupies the full axis,
-these plates show a horizontal band of taller columns, with text above and
-below what is segmented today. In other words: most of this scroll,
-including more of these same wraps, is still waiting for segmentation.
+No mesh-area or total-surface percentage is claimed here. Those quantities
+require a versioned per-mesh valid-area calculation; the previous 1,529 cm²
+and 5–8% figures were not reproducible from the committed artifacts and have
+been removed.
 
 ## Two open asks (for papyrologist eyes)
 
@@ -241,6 +243,10 @@ including more of these same wraps, is still waiting for segmentation.
   "guaranteed", not "all there is".
 - This is triage/presentation of official model output, not a new ink
   detector. Whatever the official maps miss, these plates miss.
+- `reparametrize_to_column.py` is a negative-result diagnostic: radius bands
+  do not isolate a physical wrap. `separate_wraps_by_winding.py` is an
+  **experimental** alternative validated only on one official single-wrap
+  segment plus synthetic controls, not yet on a real multi-wrap mesh.
 - Perishable: the official team is actively scaling transcription
   (PHerc 1667 fully read, 2026-06). This ordering is useful today.
 
@@ -248,17 +254,25 @@ including more of these same wraps, is still waiting for segmentation.
 
 ```bash
 pip install numpy pillow boto3 scipy
-python scripts/wrap_order.py            # meshes -> wrap_radial.json + table (~1 GB download)
+python scripts/wrap_order.py --out data/wrap_radial.json  # meshes -> committed radial table (~1 GB download)
 python scripts/make_plates.py           # official ds8 maps -> plates/*.png  (all 38 wraps)
 python scripts/make_photo_plates.py     # + surface textures -> plates_photo/*.png, plates_villa/*.png
 python scripts/build_viewer.py          # plates + human review -> viewer/index.html
+python scripts/estimate_extent.py        # committed geometry -> transparent length estimate
+python scripts/validate_release.py       # release integrity checks
 ```
 
 `scripts/vesuvius_data.py` is the anonymous open-data-bucket helper.
-`data/wrap_radial.json` is the committed result of wrap_order.py so the
-numbers above are checkable without re-downloading anything.
+`data/wrap_radial.json` and `data/scroll_extent_estimate.json` are committed
+outputs, so the geometry and length numbers above are checkable without
+re-downloading the meshes. Serve the repository root and open `/viewer/` (or
+open `viewer/index.html` from a checkout); the viewer references the committed
+plate files rather than embedding a 60+ MB HTML payload.
 
 ## License
 
-Text and scripts MIT. The plates are derived from the Vesuvius Challenge's
-official ink maps (CC BY-NC 4.0) and are therefore CC BY-NC 4.0.
+Code is MIT. `plates/`, `plates_photo/`, `plates_villa/`, the viewer's
+rendered display of them, and derivative data are governed by the source
+Vesuvius Challenge data license, CC BY-NC 4.0, not MIT. The photo and villa
+styles additionally derive from public CT surface-volume textures. See
+`CITATION.md` for the required dataset citation and paper reference.

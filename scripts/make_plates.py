@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Regenerate the column plates from the OFFICIAL ds8 ink maps.
 
-For each wrap in reading order (outer to inner, w059 -> w024, then the
+For each wrap in reading order (outer to inner, w059 -> w023, then the
 title as control), downloads the segment's official ds8 ink-detection map
 from the open-data bucket and writes a full-resolution plate:
 contrast stretch to the 2-98 percentile band, NOTHING else (no denoising,
 no content edits, no resampling).
 
 Reading order comes from wrap_radial.json (see wrap_order.py): the wNNN
-numbering is the physical radial order (Spearman 0.9993), scrolls are read
+sequence is strongly geometry-consistent with radial order (Spearman 0.9993),
+though it is not a strict sort of the per-wrap radius estimates. Scrolls are read
 unrolling outer -> inner, and within a plate the greek runs left to right
 (verified: continuous text lines across the full plate width + non-mirrored
 letterforms + the officially-read title belongs to this same render family).
