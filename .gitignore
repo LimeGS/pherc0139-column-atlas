@@ -1,3 +1,4 @@
 work_meshes/
 work_maps/
 __pycache__/
+.DS_Store

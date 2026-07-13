@@ -1,0 +1,669 @@
+{
+ "exported_at": "2026-07-13",
+ "source": "relaxed threshold 0.6<=score<0.9, full human review (73 windows)",
+ "rating_key": {
+  "1": "texto_claro",
+  "2": "posible",
+  "3": "inseguro",
+  "0": "ruido"
+ },
+ "decisions": [
+  {
+   "segment": "20260206000000-w042_2026020613",
+   "y": 546,
+   "x": 273,
+   "win": 547,
+   "score": 0.899,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250831000000-w040_2025083102",
+   "y": 834,
+   "x": 1390,
+   "win": 556,
+   "score": 0.887,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260206000000-w042_2026020613",
+   "y": 2184,
+   "x": 1638,
+   "win": 547,
+   "score": 0.8805,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260206000001-w047_2026020613",
+   "y": 1638,
+   "x": 1911,
+   "win": 546,
+   "score": 0.8748,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260206000001-w047_2026020613",
+   "y": 273,
+   "x": 273,
+   "win": 546,
+   "score": 0.8638,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260325000000-w046_20260325",
+   "y": 273,
+   "x": 2184,
+   "win": 546,
+   "score": 0.8625,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260112000000-w043_2026011217",
+   "y": 1088,
+   "x": 0,
+   "win": 545,
+   "score": 0.857,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260303000000-w034_2026030317",
+   "y": 2740,
+   "x": 2192,
+   "win": 549,
+   "score": 0.8525,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250108000000-w025_2025010863",
+   "y": 562,
+   "x": 1124,
+   "win": 562,
+   "score": 0.8509,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260303000000-w034_2026030317",
+   "y": 1644,
+   "x": 2466,
+   "win": 549,
+   "score": 0.8472,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250108000002-w027_2025010845",
+   "y": 280,
+   "x": 1680,
+   "win": 560,
+   "score": 0.8447,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260203000000-w032_2026020303",
+   "y": 828,
+   "x": 552,
+   "win": 553,
+   "score": 0.8415,
+   "rating": 0,
+   "verdict": "ruido"
+  },
+  {
+   "segment": "20260115000000-w044_2026011522",
+   "y": 1904,
+   "x": 2176,
+   "win": 544,
+   "score": 0.8396,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260130000000-w031_2026013019",
+   "y": 828,
+   "x": 552,
+   "win": 552,
+   "score": 0.8328,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260219000001-w048_2026021912",
+   "y": 271,
+   "x": 542,
+   "win": 542,
+   "score": 0.8321,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260206000000-w042_2026020613",
+   "y": 2184,
+   "x": 0,
+   "win": 547,
+   "score": 0.8318,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260112000000-w043_2026011217",
+   "y": 2176,
+   "x": 1360,
+   "win": 545,
+   "score": 0.8314,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260303000000-w034_2026030317",
+   "y": 2466,
+   "x": 1918,
+   "win": 549,
+   "score": 0.8271,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260206000001-w047_2026020613",
+   "y": 273,
+   "x": 0,
+   "win": 546,
+   "score": 0.8241,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250223000000-w059_2025022312",
+   "y": 1380,
+   "x": 1932,
+   "win": 553,
+   "score": 0.8236,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250223000000-w059_2025022312",
+   "y": 1656,
+   "x": 1932,
+   "win": 553,
+   "score": 0.8236,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250223000000-w059_2025022312",
+   "y": 1104,
+   "x": 2484,
+   "win": 553,
+   "score": 0.8162,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260112000000-w043_2026011217",
+   "y": 2176,
+   "x": 2176,
+   "win": 545,
+   "score": 0.8157,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260318000000-w049_20260318",
+   "y": 1883,
+   "x": 1345,
+   "win": 538,
+   "score": 0.8048,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260219000000-w033_2026021913",
+   "y": 822,
+   "x": 1096,
+   "win": 549,
+   "score": 0.8042,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20250108000000-w025_2025010863",
+   "y": 0,
+   "x": 1967,
+   "win": 562,
+   "score": 0.8037,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20250831000000-w040_2025083102",
+   "y": 834,
+   "x": 1112,
+   "win": 556,
+   "score": 0.8036,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260311000000-w023_202603112281",
+   "y": 843,
+   "x": 281,
+   "win": 563,
+   "score": 0.8025,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260215000000-w024_2026021572",
+   "y": 2820,
+   "x": 282,
+   "win": 565,
+   "score": 0.8003,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260215000000-w024_2026021572",
+   "y": 2538,
+   "x": 846,
+   "win": 565,
+   "score": 0.7988,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260311000000-w023_202603112281",
+   "y": 843,
+   "x": 1967,
+   "win": 563,
+   "score": 0.7919,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20250108000002-w027_2025010845",
+   "y": 560,
+   "x": 1400,
+   "win": 560,
+   "score": 0.7902,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260115000000-w044_2026011522",
+   "y": 1632,
+   "x": 1088,
+   "win": 544,
+   "score": 0.7894,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250108000002-w027_2025010845",
+   "y": 0,
+   "x": 840,
+   "win": 560,
+   "score": 0.7851,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260112000000-w043_2026011217",
+   "y": 2176,
+   "x": 1904,
+   "win": 545,
+   "score": 0.7834,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250831000000-w040_2025083102",
+   "y": 1390,
+   "x": 1112,
+   "win": 556,
+   "score": 0.7826,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250831000000-w040_2025083102",
+   "y": 1668,
+   "x": 1112,
+   "win": 556,
+   "score": 0.7749,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260115000000-w044_2026011522",
+   "y": 1904,
+   "x": 544,
+   "win": 544,
+   "score": 0.7723,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260115000000-w044_2026011522",
+   "y": 2176,
+   "x": 1360,
+   "win": 544,
+   "score": 0.7706,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250223000000-w059_2025022312",
+   "y": 2484,
+   "x": 0,
+   "win": 553,
+   "score": 0.7686,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260130000000-w031_2026013019",
+   "y": 828,
+   "x": 276,
+   "win": 552,
+   "score": 0.7641,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260303000000-w034_2026030317",
+   "y": 274,
+   "x": 822,
+   "win": 549,
+   "score": 0.7609,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260206000001-w047_2026020613",
+   "y": 273,
+   "x": 1092,
+   "win": 546,
+   "score": 0.7508,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260325000000-w046_20260325",
+   "y": 1092,
+   "x": 1365,
+   "win": 546,
+   "score": 0.7498,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260318000000-w049_20260318",
+   "y": 538,
+   "x": 1614,
+   "win": 538,
+   "score": 0.7429,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260115000000-w044_2026011522",
+   "y": 2176,
+   "x": 1632,
+   "win": 544,
+   "score": 0.7416,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250108000002-w027_2025010845",
+   "y": 280,
+   "x": 1400,
+   "win": 560,
+   "score": 0.736,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20250223000000-w059_2025022312",
+   "y": 1656,
+   "x": 2208,
+   "win": 553,
+   "score": 0.7305,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260130000000-w031_2026013019",
+   "y": 552,
+   "x": 552,
+   "win": 552,
+   "score": 0.7266,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260325000000-w046_20260325",
+   "y": 546,
+   "x": 2457,
+   "win": 546,
+   "score": 0.7253,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260206000001-w047_2026020613",
+   "y": 2184,
+   "x": 1638,
+   "win": 546,
+   "score": 0.7235,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260303000000-w034_2026030317",
+   "y": 548,
+   "x": 2466,
+   "win": 549,
+   "score": 0.722,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260112000000-w043_2026011217",
+   "y": 2176,
+   "x": 1088,
+   "win": 545,
+   "score": 0.7144,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260115000000-w044_2026011522",
+   "y": 1632,
+   "x": 1904,
+   "win": 544,
+   "score": 0.711,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260325000000-w046_20260325",
+   "y": 1638,
+   "x": 1092,
+   "win": 546,
+   "score": 0.7003,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250108000000-w025_2025010863",
+   "y": 2810,
+   "x": 2529,
+   "win": 562,
+   "score": 0.6776,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260126000000-w045_2026012619",
+   "y": 1088,
+   "x": 1360,
+   "win": 545,
+   "score": 0.672,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260126000000-w045_2026012619",
+   "y": 1632,
+   "x": 1088,
+   "win": 545,
+   "score": 0.6706,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260318000000-w049_20260318",
+   "y": 538,
+   "x": 807,
+   "win": 538,
+   "score": 0.6581,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260126000000-w045_2026012619",
+   "y": 1088,
+   "x": 816,
+   "win": 545,
+   "score": 0.6535,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260215000000-w024_2026021572",
+   "y": 1410,
+   "x": 846,
+   "win": 565,
+   "score": 0.6471,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260115000000-w044_2026011522",
+   "y": 1904,
+   "x": 0,
+   "win": 544,
+   "score": 0.6384,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260311000000-w023_202603112281",
+   "y": 1124,
+   "x": 1686,
+   "win": 563,
+   "score": 0.6366,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260303000000-w034_2026030317",
+   "y": 2740,
+   "x": 2466,
+   "win": 549,
+   "score": 0.6364,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250223000000-w059_2025022312",
+   "y": 1932,
+   "x": 2208,
+   "win": 553,
+   "score": 0.6273,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250108000000-w025_2025010863",
+   "y": 1967,
+   "x": 1967,
+   "win": 562,
+   "score": 0.6269,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20250223000000-w059_2025022312",
+   "y": 1656,
+   "x": 1380,
+   "win": 553,
+   "score": 0.6204,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250223000000-w059_2025022312",
+   "y": 828,
+   "x": 2208,
+   "win": 553,
+   "score": 0.6167,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250223000000-w059_2025022312",
+   "y": 1380,
+   "x": 2208,
+   "win": 553,
+   "score": 0.6148,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20260206000000-w042_2026020613",
+   "y": 546,
+   "x": 0,
+   "win": 547,
+   "score": 0.6125,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250108000002-w027_2025010845",
+   "y": 0,
+   "x": 1400,
+   "win": 560,
+   "score": 0.6053,
+   "rating": 3,
+   "verdict": "inseguro"
+  },
+  {
+   "segment": "20260206000000-w042_2026020613",
+   "y": 273,
+   "x": 273,
+   "win": 547,
+   "score": 0.6032,
+   "rating": 1,
+   "verdict": "texto_claro"
+  },
+  {
+   "segment": "20250223000000-w059_2025022312",
+   "y": 1932,
+   "x": 1656,
+   "win": 553,
+   "score": 0.6022,
+   "rating": 1,
+   "verdict": "texto_claro"
+  }
+ ]
+}

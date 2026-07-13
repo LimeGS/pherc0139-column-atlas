@@ -38,8 +38,13 @@ from vesuvius_data import ls, download  # noqa: E402
 
 BUCKET = "vesuvius-challenge-open-data"
 ALPHA = 0.88
-READING = ["w059", "w058", "w056", "w049", "w047", "w046", "w045", "w044",
-           "w043", "w042", "w041", "w034", "w025", "w024", "title"]
+# Every segmented wrap in physical reading order (outer -> inner, w059 -> w023;
+# rho=0.9993 vs radius), with the title (subscriptio, innermost) last as control.
+READING = ["w059", "w058", "w057", "w056", "w055", "w054", "w053", "w052",
+           "w051", "w050", "w049", "w048", "w047", "w046", "w045", "w044",
+           "w043", "w042", "w041", "w040", "w039", "w038", "w037", "w036",
+           "w035", "w034", "w033", "w032", "w031", "w030", "w029", "w028",
+           "w027", "w026", "w025", "w024", "w023", "title"]
 
 
 def fetch_texture(cli, seg, work):

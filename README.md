@@ -1,10 +1,11 @@
 # PHerc 0139: the columns, in reading order
 
-**The columns of PHerc 0139 (Philodemus, On Gods, book 8) as plates in
-physical reading order: 10 with no published readings at all, 4 with
-isolated phrase-level readings published in the paper's supplement, and
-the already-read title column as a control. Built entirely from public
-data: the official ds8 ink maps and the public segment meshes.**
+**Every segmented column of PHerc 0139 (Philodemus, On Gods, book 8) as
+plates in physical reading order — all 38 segments (37 body wraps + the
+title): 33 with no published readings at all, 4 with isolated phrase-level
+readings published in the paper's supplement, and the already-read title
+column as a control. Built entirely from public data: the official ds8 ink
+maps and the public segment meshes.**
 
 What is formally published on PHerc 0139 (arXiv 2606.29085, 2026-06-25):
 the end title ("Φιλοδήμου περὶ θεῶν Η") and, in Supplementary Fig. 1
@@ -45,7 +46,7 @@ independent physical sanity check.
 
 Herculaneum scrolls are read unrolling outer → inner (the end of the work,
 with the subscriptio, is rolled innermost). So reading order is
-w059 → w024. The title lands at r = 5.50 mm — **inside** the innermost
+w059 → w023. The title lands at r = 5.50 mm — **inside** the innermost
 body wrap — exactly where a subscriptio should be. (Caveat: the title
 mesh sits ~4-5 cm away along the axis from the body wraps — a physically
 separate chunk in the same scanned volume — so its radius is indicative,
@@ -102,12 +103,22 @@ Two renderings of each column, toggled in the viewer:
 ## Human review behind the amber boxes
 
 The windows come from a legibility index over the official maps
-(proxy classifier → human review of every flagged window, one by one):
-63 flagged, **54 rated "clear text"** (52 outside the title). In a second
-pass, the 52 body windows were re-reviewed *in physical reading order*
-with 6 visual filters each: **52/52 confirmed legible**
-(`data/atlas_readthrough.json`; raw first-pass review in
-`data/review_0139_human.json`). Single reviewer, no inter-rater check;
+(proxy classifier → human review of every flagged window, one by one),
+across two score bands:
+
+- **score ≥ 0.9:** 63 windows flagged, **54 rated "clear text"** (52 outside
+  the title); the 52 body windows were then re-reviewed *in physical reading
+  order* with 6 visual filters each, **52/52 confirmed legible**
+  (`data/atlas_readthrough.json`; raw review in `data/review_0139_human.json`).
+- **relaxed 0.6 ≤ score < 0.9:** the 0.9 cut turned out to be very
+  conservative, so all 73 windows in this band were reviewed the same way
+  (`data/review_band_0139.json`): **53 clear / 19 uncertain / 1 noise** — a
+  single false positive in the whole band, i.e. the sub-0.9 signal was mostly
+  real text the threshold was discarding.
+
+Together: **107 windows confirmed legible across 16 body columns plus the
+title** (up from 14 body columns at ≥0.9; the relaxed pass added the first
+confirmed text on w040 and w048). Single reviewer, no inter-rater check;
 "legible" means letterforms a reader could attempt — **it is not a
 transcription**.
 
@@ -115,36 +126,69 @@ transcription**.
 
 | # | wrap | radius (mm) | clear windows |
 |---|------|------------|---------------|
-| 01 | w059 | 13.26 | 3 |
+| 01 | w059 | 13.26 | 13 |
 | 02 | w058 | 13.05 | 1 |
-| 03 | w056 | 12.79 | 2 |
-| 04 | w049 | 11.62 | 4 |
-| 05 | w047 | 11.37 | 8 |
-| 06 | w046 | 10.95 | 4 |
-| 07 | w045 | 10.92 | 3 |
-| 08 | w044 | 10.62 | 7 |
-| 09 | w043 | 10.43 | 10 |
-| 10 | w042 | 10.25 | 1 |
-| 11 | w041 | 10.15 | 1 |
-| 12 | w034 | 9.04 | 3 |
-| 13 | w025 | 7.52 | 1 |
-| 14 | w024 | 7.28 | 4 |
-| 15 | title | 5.50 | 2 (control — officially read) |
+| 03 | w057 | 12.91 | — not yet reviewed |
+| 04 | w056 | 12.79 | 2 |
+| 05 | w055 | 12.48 | — not yet reviewed |
+| 06 | w054 | 12.16 | — not yet reviewed |
+| 07 | w053 | 12.07 | — not yet reviewed |
+| 08 | w052 | 11.82 | — not yet reviewed |
+| 09 | w051 | 11.69 | — not yet reviewed |
+| 10 | w050 | 11.53 | — not yet reviewed |
+| 11 | w049 | 11.62 | 7 |
+| 12 | w048 | 11.59 | 1 |
+| 13 | w047 | 11.37 | 12 |
+| 14 | w046 | 10.95 | 8 |
+| 15 | w045 | 10.92 | 6 |
+| 16 | w044 | 10.62 | 14 |
+| 17 | w043 | 10.43 | 14 |
+| 18 | w042 | 10.25 | 6 |
+| 19 | w041 | 10.15 | 1 |
+| 20 | w040 | 9.94 | 4 |
+| 21 | w039 | 9.73 | — not yet reviewed |
+| 22 | w038 | 9.57 | — not yet reviewed |
+| 23 | w037 | 9.36 | — not yet reviewed |
+| 24 | w036 | 9.26 | — not yet reviewed |
+| 25 | w035 | 9.19 | — not yet reviewed |
+| 26 | w034 | 9.04 | 9 |
+| 27 | w033 | 8.91 | 0 (reviewed, none clear) |
+| 28 | w032 | 8.75 | 0 (reviewed, none clear) |
+| 29 | w031 | 8.61 | 0 (reviewed, none clear) |
+| 30 | w030 | 8.42 | — not yet reviewed |
+| 31 | w029 | 8.26 | — not yet reviewed |
+| 32 | w028 | 8.10 | — not yet reviewed |
+| 33 | w027 | 7.89 | 0 (reviewed, none clear) |
+| 34 | w026 | 7.72 | — not yet reviewed |
+| 35 | w025 | 7.52 | 2 |
+| 36 | w024 | 7.28 | 5 |
+| 37 | w023 | 7.02 | 0 (reviewed, none clear) |
+| 38 | title | 5.50 | 2 (control — officially read) |
 
-The densest text sits mid-band (w043-w047: 29 of the 52 windows).
+Ordering is by wrap number (= the physical radial order, ρ=0.9993); the
+radius column is the measured per-wrap value, whose sub-0.17 mm scatter
+produces a couple of local inversions (e.g. w050 vs w049). Human review so
+far covers 22 of the 38 wraps: 17 with confirmed legible windows (16 body
+columns plus the title control), and 5 more looked at but with no window
+clear enough to confirm (w023/w027/w031/w032/w033). The other 16 are shown
+but **not yet reviewed** — their plates are included so the whole segmented
+scroll can be read in order. The densest confirmed text sits mid-band
+(w043-w047: 54 of the 107 confirmed windows).
 
 ## How much of the scroll is this?
 
-Measured against what is publicly segmented (38 segments, 1,529 cm2 of
-mesh, ~2.4 m of papyrus by sum of 2*pi*r): these 15 plates are 584 cm2 /
-0.97 m, i.e. **about 40% of everything segmented so far**.
+These 38 plates are **everything publicly segmented on PHerc 0139**: 38
+segments, 1,529 cm2 of mesh, ~2.4 m of papyrus by sum of 2*pi*r — 100% of
+what is segmented so far. (An earlier cut of this atlas showed only the 15
+human-reviewed wraps, 584 cm2 / ~40% of this; the plates now cover the full
+segmented set, reviewed or not.)
 
 Against the whole scroll (estimate, assumptions explicit): the scanned
 volume is 184.6 mm along the axis and 63.6 mm across. With an outer radius
 of 25-30 mm, a core of 3-5 mm and the measured 0.17 mm/wrap step, the
 scroll holds roughly 118-159 wraps and 11-16 m of papyrus. These plates
-are then **~6-9% of the papyrus length within the covered band, and ~2-3%
-of the total surface**.
+are then **~15-22% of the papyrus length, and ~5-8% of the total
+surface**.
 
 One more honest number: the segments only span a **52 mm axial band of the
 184.6 mm volume (~28% of the axis)**. If papyrus occupies the full axis,
@@ -164,19 +208,21 @@ including more of these same wraps, is still waiting for segmentation.
 ## Honest limits
 
 - We flag and order; we do not read greek. No transcription is claimed.
-- Four of the fourteen body plates (w025, w034, w047, w049) contain the
+- Four of the 37 body plates (w025, w034, w047, w049) contain the
   five isolated phrases read in the paper's supplement; they are labeled
-  in the viewer. The other ten body plates have no published readings we
+  in the viewer. The other 33 body plates have no published readings we
   could locate (checked against the paper incl. supplement,
   scrollprize.org and community repos, 2026-07-13).
 - Single reviewer for the window labels.
 - ds8 resolution (~18 µm/px): letters are 80-220 px tall — visible, but a
   serious reading attempt may want the full-resolution renders.
 - **The amber boxes undercount the text — by design.** They mark only the
-  windows that scored >=0.9 AND were human-confirmed (62 of 1,860 one-cm
-  windows on these segments, ~3%). The index is precision-oriented triage;
-  the plates visibly contain far more text than the flagged spots (faint or
-  partial text dilutes inside a 1 cm window and scores low). Boxes mean
+  107 one-cm windows a human confirmed as clear text (54 from the >=0.9 band,
+  53 from the relaxed 0.6-0.9 pass), out of ~4,900 gridded windows on these
+  segments. The index is precision-oriented triage; the plates visibly
+  contain far more text than the flagged spots (faint or partial text dilutes
+  inside a 1 cm window and scores low — which is exactly why relaxing the
+  threshold recovered 53 more with only one false positive). Boxes mean
   "guaranteed", not "all there is".
 - This is triage/presentation of official model output, not a new ink
   detector. Whatever the official maps miss, these plates miss.
@@ -188,8 +234,9 @@ including more of these same wraps, is still waiting for segmentation.
 ```bash
 pip install numpy pillow boto3 scipy
 python scripts/wrap_order.py            # meshes -> wrap_radial.json + table (~1 GB download)
-python scripts/make_plates.py           # official ds8 maps -> plates/*.png
+python scripts/make_plates.py           # official ds8 maps -> plates/*.png  (all 38 wraps)
 python scripts/make_photo_plates.py     # + surface textures -> plates_photo/*.png
+python scripts/build_viewer.py          # plates + human review -> viewer/index.html
 ```
 
 `scripts/vesuvius_data.py` is the anonymous open-data-bucket helper.
