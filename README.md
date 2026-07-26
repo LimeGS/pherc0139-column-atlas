@@ -1,24 +1,36 @@
-# PHerc 0139: the columns, in reading order
+# PHerc 0139 — the columns, in reading order
 
-**Every segmented column of PHerc 0139 (Philodemus, On Gods, book 8) as
-plates in physical reading order — all 38 segments (37 body wraps + the
-title): 33 with no published readings at all, 4 with isolated phrase-level
-readings published in the paper's supplement, and the already-read title
-column as a control. Built entirely from public data: the official ds8 ink
-maps and the public segment meshes.**
+### ▶ **[Open the viewer](https://limegs.github.io/pherc0139-column-atlas/viewer/)**
 
-What is formally published on PHerc 0139 (arXiv 2606.29085, submitted 2026-06-27):
-the end title ("Φιλοδήμου περὶ θεῶν Η") and, in Supplementary Fig. 1
-("Readings from PHerc. 139"), five isolated phrase readings located by
-wrap: w49 χωρὶϲ προνο[ί]α̣ϲ̣, w25 ἀόρατα, w34 καὶ τὸ κατ̣ὰ̣ φύϲιν,
-w47 καὶ πάν̣τ̣α̣ χωρὶϲ πόνων, w49(int) νοερόν. No continuous transcription
-of any column has been published. Everything in these plates beyond the
-title and those five phrases is, as of 2026-07-13, unpublished territory —
-and the five located phrases double as anchor points to align this series
-against the official reading.
+Leonel Wainer (LimeGS) · plates published 2026-07-13
 
-Open `viewer/index.html` (or serve this repo and open `/viewer/`) for the
-annotated reading view; `plates/` holds the clean full-resolution PNGs.
+Every segmented column of PHerc 0139 (Philodemus, *On Gods*, book 8) as plates
+in physical reading order — all 38 segments, 37 body wraps outer → inner plus
+the title control. Built entirely from public data: the official ds8 ink maps
+and the public segment meshes. It orders and flags; **it is not a
+transcription.**
+
+![All 38 columns of PHerc 0139 in reading order](docs/atlas.jpg)
+
+## What was already published
+
+The end title (`Φιλοδήμου περὶ θεῶν Η`) and five isolated phrase readings
+located by wrap — w49 χωρὶϲ προνο[ί]α̣ϲ̣, w25 ἀόρατα, w34 καὶ τὸ κατ̣ὰ̣ φύϲιν,
+w47 καὶ πάν̣τ̣α̣ χωρὶϲ πόνων, w49(int) νοερόν
+(arXiv 2606.29085, submitted 2026-06-27, Supplementary Fig. 1).
+No continuous transcription of any column has been published. So 33 of these 38 plates are unpublished territory, and the
+five located phrases double as anchor points to align this series against the
+official reading.
+
+## The viewer
+
+[![The viewer](docs/viewer.jpg)](https://limegs.github.io/pherc0139-column-atlas/viewer/)
+
+One column at a time, in reading order: pick from the rail or press `←`/`→`,
+switch plate style with `1`/`2`/`3`, click the plate for full resolution
+centred where you clicked. Each column carries its radius, its confirmed-window
+count and — on the four wraps that have one — the published phrase. Runs from a
+checkout too: serve the repo root and open `/viewer/`.
 
 ## How the reading order was obtained
 
@@ -81,24 +93,21 @@ reading order is x ascending. The exact wrap-to-wrap seam position (where
 one turn's text ends and the next begins) is not modeled; it does not
 affect the relative order of anything shown.
 
-### 4. The plates (three styles)
+## The plates (three styles)
 
-Three renderings of each column, toggled in the viewer:
+![The same column in the three plate styles](docs/styles.jpg)
 
 - **`plates/` — pure ink maps.** The official ds8 ink-detection maps
   (~18 µm/px), contrast-stretched to the 2-98 percentile band, ink white
   on black. Nothing else: no denoising, no content edits, no resampling.
   The viewer overlays amber boxes on the reviewed windows; the PNGs are
   clean.
-- **`plates_photo/` — our publication-style composite.** Papyrus texture
-  from the CT surface volume (the segment's `surface-volumes` zarr,
-  level-3 multiscale, mid-depth layer) as a light background, with the ink
-  prediction composited in BLACK on top
-  (`out = paper_texture * (1 - 0.88 * ink)`). This is our own approximation,
-  in the visual spirit of the paper's Fig. 4 panel b ("ink-enhanced signal
-  shown in black against the papyrus texture") — letters read as lines of
-  text rather than white blobs — but **not** a byte-verified match to the
-  paper's own renderer: no formula for that figure is published.
+- **`plates_photo/` — our own composite.** Papyrus texture from the CT
+  surface volume (the segment's `surface-volumes` zarr, level-3 multiscale,
+  mid-depth layer) as a light background, with the ink prediction composited
+  in BLACK on top (`out = paper_texture * (1 - 0.88 * ink)`) — letters read
+  as lines of text rather than white blobs. An approximation of the
+  convention, not a byte-verified match to anyone's renderer.
 - **`plates_villa/` — the verified villa recipe.** Same papyrus base, but
   the ink is composited with the actual ink-bake formula from
   ScrollPrize/villa's `foundation/scroll-unwrap-pipeline`
@@ -110,15 +119,14 @@ Three renderings of each column, toggled in the viewer:
   uses our same zarr-slice papyrus as the base — the *ink formula* is
   verified, the *base texture* is still an approximation.
 
-  The texture is fetched with HTTP Range requests over the raw
-  (uncompressed, `compressor: null`) zarr chunks so only the three mid
-  layers of each chunk are downloaded, not the whole volume. Regenerate
-  `plates_photo/` and `plates_villa/` together with
-  `scripts/make_photo_plates.py`, which fetches the official ds8 maps and
-  the textures from the public bucket once and composites both recipes
-  from the same fetch.
+The texture is fetched with HTTP Range requests over the raw (uncompressed,
+`compressor: null`) zarr chunks so only the three mid layers of each chunk are
+downloaded, not the whole volume. `scripts/make_photo_plates.py` fetches the
+ds8 maps and the textures once and composites both recipes from the same fetch.
 
 ## Human review behind the amber boxes
+
+![w047 with its twelve confirmed-legible windows boxed](docs/windows.jpg)
 
 The windows come from a legibility index over the official maps
 (proxy classifier → human review of every flagged window, one by one),
@@ -196,40 +204,26 @@ scroll can be read in order. The densest confirmed text sits mid-band
 
 ## How much of the scroll is this?
 
-The atlas contains the **38 segment IDs frozen in
-`data/wrap_radial.json` on 2026-07-13**: 37 body wraps and the title control.
-This is a reproducible snapshot of the public bucket inventory used by this
-project, not a claim that the live bucket can never gain more segments.
+The atlas contains the **38 segment IDs frozen in `data/wrap_radial.json` on
+2026-07-13**: 37 body wraps and the title control — a reproducible snapshot of
+the public bucket inventory, not a claim that the live bucket can never gain
+more segments.
 
-The sum of the 37 body-wrap circumferences is **2.36 m** (2.40 m if the title
-control is included). `scripts/estimate_extent.py` recomputes this number
-from the committed radial data and writes an assumption-explicit range for a
-whole-scroll model: 118–159 wraps and 11.1–16.4 m, using a 25–30 mm outer
-radius, 3–5 mm core and 0.17 mm pitch. That places the body-wrap circumference
-sum at approximately **14–21% of modeled total papyrus length**.
-
-No mesh-area or total-surface percentage is claimed here. Those quantities
-require a versioned per-mesh valid-area calculation; the previous 1,529 cm²
-and 5–8% figures were not reproducible from the committed artifacts and have
-been removed.
-
-## Two open asks (for papyrologist eyes)
-
-1. Is any of this actually readable at ds8 resolution?
-2. The paper's Supplementary Fig. 1 publishes five phrase readings WITH
-   wrap locations (w25, w34, w47, w49) and images at 5 mm scale. All four
-   wraps are plates in this atlas (13, 12, 05, 04). Matching those five
-   published snippets to exact coordinates in our plates would anchor the
-   whole series, pixel-level, against the official reading.
+The sum of the 37 body-wrap circumferences is **2.36 m** (2.40 m with the title
+control). `scripts/estimate_extent.py` recomputes this from the committed
+radial data and writes an assumption-explicit range for a whole-scroll model:
+118–159 wraps and 11.1–16.4 m, using a 25–30 mm outer radius, 3–5 mm core and
+0.17 mm pitch — putting the body-wrap circumference sum at roughly **14–21% of
+modeled total papyrus length**. No mesh-area or total-surface percentage is
+claimed: that needs a versioned per-mesh valid-area calculation.
 
 ## Honest limits
 
 - We flag and order; we do not read greek. No transcription is claimed.
-- Four of the 37 body plates (w025, w034, w047, w049) contain the
-  five isolated phrases read in the paper's supplement; they are labeled
-  in the viewer. The other 33 body plates have no published readings we
-  could locate (checked against the paper incl. supplement,
-  scrollprize.org and community repos, 2026-07-13).
+- Four of the 37 body plates (w025, w034, w047, w049) contain the five
+  published phrases; they are labeled in the viewer. The other 33 have no
+  published readings we could locate (checked against the paper incl.
+  supplement, scrollprize.org and community repos, 2026-07-13).
 - Single reviewer for the window labels.
 - ds8 resolution (~18 µm/px): letters are 80-220 px tall — visible, but a
   serious reading attempt may want the full-resolution renders.
@@ -247,17 +241,26 @@ been removed.
   do not isolate a physical wrap. `separate_wraps_by_winding.py` is an
   **experimental** alternative validated only on one official single-wrap
   segment plus synthetic controls, not yet on a real multi-wrap mesh.
-- Perishable: the official team is actively scaling transcription
-  (PHerc 1667 fully read, 2026-06). This ordering is useful today.
+- Perishable: transcription of these scrolls is scaling fast. This ordering is
+  useful today.
+
+## Two open asks (for papyrologist eyes)
+
+1. Is any of this actually readable at ds8 resolution?
+2. Matching the five published phrase snippets (w25, w34, w47, w49 — plates 35,
+   26, 13, 11 here) to exact coordinates in our plates would anchor the whole
+   series, pixel-level, against the official reading.
 
 ## Reproduce (all from public data)
 
 ```bash
 pip install numpy pillow boto3 scipy
 python scripts/wrap_order.py --out data/wrap_radial.json  # meshes -> committed radial table (~1 GB download)
-python scripts/make_plates.py           # official ds8 maps -> plates/*.png  (all 38 wraps)
-python scripts/make_photo_plates.py     # + surface textures -> plates_photo/*.png, plates_villa/*.png
-python scripts/build_viewer.py          # plates + human review -> viewer/index.html
+python scripts/make_plates.py            # official ds8 maps -> plates/*.png  (all 38 wraps)
+python scripts/make_photo_plates.py      # + surface textures -> plates_photo/*.png, plates_villa/*.png
+python scripts/make_thumbs.py            # plates_villa -> thumbs/*.jpg (viewer rail)
+python scripts/build_viewer.py           # plates + human review -> viewer/index.html
+python scripts/make_readme_figures.py    # plates + review -> docs/*.jpg (the figures above)
 python scripts/estimate_extent.py        # committed geometry -> transparent length estimate
 python scripts/validate_release.py       # release integrity checks
 ```
@@ -265,14 +268,14 @@ python scripts/validate_release.py       # release integrity checks
 `scripts/vesuvius_data.py` is the anonymous open-data-bucket helper.
 `data/wrap_radial.json` and `data/scroll_extent_estimate.json` are committed
 outputs, so the geometry and length numbers above are checkable without
-re-downloading the meshes. Serve the repository root and open `/viewer/` (or
-open `viewer/index.html` from a checkout); the viewer references the committed
-plate files rather than embedding a 60+ MB HTML payload.
+re-downloading the meshes. The viewer references the committed plate files
+rather than embedding a 60+ MB HTML payload, and loads one full-resolution
+plate at a time (the rail runs on the 544 KB `thumbs/` set).
 
 ## License
 
-Code is MIT. `plates/`, `plates_photo/`, `plates_villa/`, the viewer's
-rendered display of them, and derivative data are governed by the source
-Vesuvius Challenge data license, CC BY-NC 4.0, not MIT. The photo and villa
-styles additionally derive from public CT surface-volume textures. See
+Code is MIT. `plates/`, `plates_photo/`, `plates_villa/`, `thumbs/`, `docs/`,
+the viewer's rendered display of them, and derivative data are governed by the
+source Vesuvius Challenge data license, CC BY-NC 4.0, not MIT. The photo and
+villa styles additionally derive from public CT surface-volume textures. See
 `CITATION.md` for the required dataset citation and paper reference.

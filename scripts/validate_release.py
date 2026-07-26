@@ -63,11 +63,11 @@ def main() -> None:
           "viewer clear-window totals match review JSON", failures)
 
     for directory, suffix in (("plates", ".png"), ("plates_photo", "_photo.png"),
-                              ("plates_villa", "_villa.png")):
+                              ("plates_villa", "_villa.png"), ("thumbs", ".jpg")):
         files = list((ROOT / directory).glob(f"*{suffix}"))
         check(len(files) == 38, f"{directory} contains 38 plate files", failures)
 
-    expected_keys = {"src", "src_photo", "src_villa", "boxes", "size_px"}
+    expected_keys = {"src", "src_photo", "src_villa", "src_thumb", "boxes", "size_px"}
     check(all(expected_keys <= entry.keys() for entry in entries),
           "viewer entries use relative sources and SVG box metadata", failures)
     check(all(not value.startswith("data:") for entry in entries
@@ -75,7 +75,8 @@ def main() -> None:
           "viewer does not embed image payloads", failures)
     viewer_dir = ROOT / "viewer"
     check(all((viewer_dir / entry[key]).resolve().is_file()
-              for entry in entries for key in ("src", "src_photo", "src_villa")),
+              for entry in entries
+              for key in ("src", "src_photo", "src_villa", "src_thumb")),
           "every viewer source path resolves to a committed image", failures)
     check(all(all(0 <= x <= entry["size_px"][0] and 0 <= y <= entry["size_px"][1]
                   and size > 0 and x + size <= entry["size_px"][0]
@@ -83,6 +84,12 @@ def main() -> None:
                   for x, y, size in entry["boxes"])
               for entry in entries),
           "all review boxes lie inside their source plate", failures)
+    icon = re.search(r'rel="icon" href="([^"]+)"', (ROOT / "viewer/index.html").read_text())
+    check(bool(icon) and (ROOT / "viewer" / icon.group(1)).is_file(),
+          "viewer favicon is linked and committed", failures)
+    figures = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", (ROOT / "README.md").read_text())
+    check(bool(figures) and all((ROOT / fig).is_file() for fig in figures),
+          "every README figure resolves to a committed file", failures)
     index_size = (ROOT / "viewer/index.html").stat().st_size
     check(index_size < 1_000_000, "viewer index is below 1 MB", failures)
     check("submitted 2026-06-27" in (ROOT / "README.md").read_text(),

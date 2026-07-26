@@ -99,6 +99,7 @@ def main():
             "reading": prev.get(w, ""), "boxes": agg[w]["boxes"],
             "src_photo": f"../plates_photo/{i:02d}_{w}_photo.png",
             "src_villa": f"../plates_villa/{i:02d}_{w}_villa.png",
+            "src_thumb": f"../thumbs/{i:02d}_{w}.jpg",
         })
         print(f"{i:02d} {w:6s} {W}x{H} n_clear={nc} "
               f"boxes={len(agg[w]['boxes'])} max={plates[-1]['max_score']}")

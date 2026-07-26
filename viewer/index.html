@@ -1,102 +1,275 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PHerc 0139 — the columns, in reading order</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 :root, :root[data-theme="light"], :root[data-theme="dark"]{
-  --bg:#14100b; --panel:#1e150c; --line:#382a19; --ink:#ece3d6; --mut:#a9997f;
-  --faint:#7a6a51; --amber:#e8a33d; --amber-h:#f2b955;
+  --bg:#100d09; --panel:#191309; --panel-2:#211809; --line:#332616; --line-2:#4a381f;
+  --ink:#efe7da; --mut:#a4937a; --faint:#7b6b52;
+  --amber:#e8a33d; --amber-h:#f6c375;
   --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  --serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --chrome:224px;
 }
 *{box-sizing:border-box;margin:0}
-html,body{background:var(--bg)!important;color:var(--ink)}
-body{font:16px/1.55 -apple-system,'Inter',sans-serif;padding:22px 16px 60px}
-.wrap{max-width:1340px;margin:0 auto}
-.kicker{font:600 12.5px var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--amber);margin-bottom:6px}
-h1{font-size:24px;font-weight:650;margin-bottom:6px}
-.sub{color:var(--mut);font-size:15px;max-width:75ch;margin-bottom:8px}
-.legend{font:500 13px var(--mono);color:var(--faint);margin-bottom:22px}
-.legend b{color:var(--amber)}
-.toggle{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.toggle button{font:600 13px var(--mono);color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 14px;cursor:pointer}
-.toggle button:hover{border-color:var(--amber)}
-.toggle button[aria-pressed=true]{color:var(--amber-h);border-color:var(--amber);background:#241a0e}
-.plate{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:26px;overflow:hidden}
-.phead{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline;padding:14px 18px}
-.phead .pos{font:700 20px var(--mono);color:var(--amber)}
-.phead .w{font:650 18px var(--mono)}
-.phead .m{font:400 13.5px var(--mono);color:var(--faint)}
-.pimg{background:#000;text-align:center}
-.image-wrap{position:relative;display:inline-block;max-width:100%;line-height:0}
-.pimg img{max-width:100%;display:block;margin:0 auto;cursor:zoom-in}
+/* everything below is sized in rem, so the whole UI tracks this one value */
+html{font-size:clamp(16px, 0.52vw + 9.4px, 22px)}
+html,body{background:var(--bg)!important;color:var(--ink);height:100%}
+body{font:0.95rem/1.5 -apple-system,'Inter',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+a{color:var(--amber);text-decoration:none;border-bottom:1px solid #6a4a1c}
+a:hover{color:var(--amber-h);border-color:var(--amber)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ---- header ---- */
+header{display:flex;gap:1.8rem;align-items:flex-start;justify-content:space-between;
+  padding:1rem 1.4rem .9rem;border-bottom:1px solid var(--line);background:linear-gradient(#191309,#130f0a)}
+h1{font:400 1.6rem/1.15 var(--serif);letter-spacing:.005em}
+h1 em{font-style:normal;color:var(--amber)}
+header>div{min-width:0}
+h1 .by{font:500 .8rem var(--mono);color:var(--faint);letter-spacing:.02em;white-space:nowrap}
+h1 .by::before{content:"\00b7";padding:0 .5rem;color:#4a3d2b}
+.intro{color:var(--mut);font-size:.9rem;line-height:1.55;max-width:96ch;margin-top:.35rem}
+.intro b{color:var(--ink);font-weight:600}
+.links{flex:none;display:flex;gap:.9rem;font:500 .78rem var(--mono);letter-spacing:.06em;text-transform:uppercase;padding-top:.35rem}
+.links a{border:0;color:var(--faint)}
+.links a:hover{color:var(--amber)}
+
+/* ---- app frame ---- */
+main{flex:1;min-height:0;display:grid;grid-template-columns:16.6rem minmax(0,1fr)}
+
+/* ---- column rail ---- */
+#rail{border-right:1px solid var(--line);overflow-y:auto;min-width:0;padding:.5rem;background:#130f0a;
+  scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
+.rail-h{font:600 .7rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding:.4rem .5rem .5rem}
+.item{display:grid;grid-template-columns:4.2rem minmax(0,1fr);gap:.65rem;align-items:center;width:100%;
+  padding:.4rem;border-radius:.6rem;border:1px solid transparent;text-align:left;margin-bottom:.12rem}
+.item:hover{background:var(--panel)}
+.item[aria-current=true]{background:var(--panel-2);border-color:#6a4a1c}
+.item img{width:4.2rem;height:3rem;object-fit:cover;object-position:center;border-radius:.25rem;background:#000;
+  filter:grayscale(.15) contrast(1.05);opacity:.72}
+.item[aria-current=true] img,.item:hover img{opacity:1}
+.item .n{font:600 .8rem var(--mono);color:var(--faint)}
+.item[aria-current=true] .n{color:var(--amber)}
+.item .w{font:600 .9rem var(--mono);color:var(--ink);margin-left:.4rem}
+.item .s{font:400 .72rem var(--mono);color:var(--faint);margin-top:.15rem;display:flex;gap:.3rem;
+  align-items:center;white-space:nowrap;overflow:hidden}
+.dot{width:.32rem;height:.32rem;border-radius:50%;background:var(--amber);flex:none}
+.dot.off{background:#4a3d2b}
+.item .quote{color:var(--amber);font-size:.75rem}
+
+/* ---- stage ---- */
+#stage{display:flex;flex-direction:column;min-width:0;min-height:0}
+.bar{display:flex;flex-wrap:wrap;gap:.65rem 1.15rem;align-items:center;justify-content:space-between;
+  padding:.65rem 1.3rem;border-bottom:1px solid var(--line)}
+.bar>span{display:flex;flex-wrap:wrap;gap:.55rem .9rem;align-items:center}
+.bar .pos{font:600 .98rem var(--mono);color:var(--amber)}
+.bar .meta{font:400 .83rem var(--mono);color:var(--faint)}
+.bar .meta b{color:var(--mut);font-weight:500}
+.bar .meta i{font-style:normal;color:#5b4c36;padding:0 .45rem}
+.reading{font:500 .86rem var(--mono);color:var(--amber-h);background:#2a1d0b;border:1px solid #5c4118;
+  border-radius:.4rem;padding:.2rem .6rem}
+.nav{display:flex;gap:.25rem}
+.nav button{width:2rem;height:1.85rem;border:1px solid var(--line-2);border-radius:.45rem;color:var(--mut);font:.9rem var(--mono)}
+.nav button:hover:not(:disabled){border-color:var(--amber);color:var(--amber)}
+.nav button:disabled{opacity:.3;cursor:default}
+.styles{display:flex;border:1px solid var(--line-2);border-radius:.5rem;overflow:hidden}
+.styles button{font:600 .78rem var(--mono);color:var(--faint);padding:.4rem .75rem;border-right:1px solid var(--line-2)}
+.styles button:last-child{border-right:0}
+.styles button:hover{color:var(--mut)}
+.styles button[aria-pressed=true]{color:#1a1206;background:var(--amber)}
+
+.view{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:1.1rem 1.3rem;
+  background:radial-gradient(ellipse at center,#171208,#100d09 78%)}
+.frame{position:relative;line-height:0;min-width:0;max-width:100%}
+.frame img{max-width:100%;max-height:calc(100vh - var(--chrome));width:auto;height:auto;display:block;
+  border-radius:3px;cursor:zoom-in;opacity:0;transition:opacity .18s}
+.frame img.on{opacity:1}
 .boxes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .boxes rect{fill:none;stroke:var(--amber);stroke-width:2;vector-effect:non-scaling-stroke}
-.boxes.hidden{display:none}
-.lightbox{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.94);display:flex;align-items:flex-start;justify-content:center;cursor:zoom-out;overflow:auto;padding:12px}
+.foot{display:flex;flex-wrap:wrap;gap:.4rem 1rem;justify-content:space-between;padding:.5rem 1.3rem;
+  border-top:1px solid var(--line);font:400 .78rem var(--mono);color:var(--faint)}
+.foot .k{color:var(--mut)}
+.lightbox{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.95);display:flex;align-items:flex-start;
+  justify-content:center;cursor:zoom-out;overflow:auto;padding:.6rem}
 .lightbox img{max-width:none}
 .hidden{display:none}
-footer{font:400 12.5px var(--mono);color:var(--faint);line-height:1.8;margin-top:10px}
-</style>
-<div class="wrap">
-<div class="kicker">PHerc 0139 · wrap sequence geometry-checked (ρ=0.9993) · reading direction checked · 2026-07-13</div>
-<h1>The columns, in reading order</h1>
-<p class="sub">Each plate is one full wrap of the scroll — and at these radii (7-13mm), one turn ≈ one
-Herculaneum column (2πr = 46-83mm). Read top to bottom on this page = outer to inner in the scroll
-= order of the text. Within each plate, the greek runs left to right.</p>
-<p class="legend">The <b>amber</b> boxes mark the 52+2 windows human-reviewed as clearly legible.
-Click a plate to zoom. Three styles:</p>
-<div class="toggle" role="group" aria-label="plate style">
-  <button id="tk-photo" aria-pressed="true">papyrus + ink (our approximation)</button>
-  <button id="tk-villa" aria-pressed="false">papyrus + ink (verified villa recipe)</button>
-  <button id="tk-ink" aria-pressed="false">pure ink map (+ boxes)</button>
-</div>
-<p class="legend" id="stylenote"></p>
-<div id="plates"></div>
-<footer>All that is formally published on PHerc 0139 (arXiv 2606.29085): the title, plus 5 isolated
-phrases located by wrap in Supplementary Fig. 1 (w25, w34, w47, w49 — labeled on their plates). No
-column has a published continuous transcription. Plate 38 (the title, "Φιλοδήμου περὶ θεῶν Η") is the
-control: already read officially, the innermost of the scroll.</footer>
-</div>
-<div class="lightbox hidden" id="lightbox"><img id="lightimg" alt=""></div>
-<script>
-const PLATES = [{"pos": 1, "wrap": "w059", "seg": "20250223000000-w059_2025022312", "r_mm": 13.26, "n_clear": 13, "reviewed": true, "max_score": 0.9392, "src": "../plates/01_w059.png", "size_px": [4870, 3510], "reading": "", "boxes": [[2208, 1104, 553], [2484, 2208, 553], [2484, 1932, 553], [1932, 1380, 553], [1932, 1656, 553], [2484, 1104, 553], [0, 2484, 553], [2208, 1656, 553], [2208, 1932, 553], [1380, 1656, 553], [2208, 828, 553], [2208, 1380, 553], [1656, 1932, 553]], "src_photo": "../plates_photo/01_w059_photo.png", "src_villa": "../plates_villa/01_w059_villa.png"}, {"pos": 2, "wrap": "w058", "seg": "20260210000000-w058_2026021020", "r_mm": 13.05, "n_clear": 1, "reviewed": true, "max_score": 0.9882, "src": "../plates/02_w058.png", "size_px": [4800, 3650], "reading": "", "boxes": [[1662, 831, 554]], "src_photo": "../plates_photo/02_w058_photo.png", "src_villa": "../plates_villa/02_w058_villa.png"}, {"pos": 3, "wrap": "w057", "seg": "20260127000000-w057_2026012713", "r_mm": 12.91, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/03_w057.png", "size_px": [4760, 3690], "reading": "", "boxes": [], "src_photo": "../plates_photo/03_w057_photo.png", "src_villa": "../plates_villa/03_w057_villa.png"}, {"pos": 4, "wrap": "w056", "seg": "20260115000001-w056_2026011514", "r_mm": 12.79, "n_clear": 2, "reviewed": true, "max_score": 0.934, "src": "../plates/04_w056.png", "size_px": [4740, 3490], "reading": "", "boxes": [[3588, 2484, 552], [3864, 2484, 552]], "src_photo": "../plates_photo/04_w056_photo.png", "src_villa": "../plates_villa/04_w056_villa.png"}, {"pos": 5, "wrap": "w055", "seg": "20251226000000-w055_2025122611", "r_mm": 12.48, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/05_w055.png", "size_px": [5070, 3750], "reading": "", "boxes": [], "src_photo": "../plates_photo/05_w055_photo.png", "src_villa": "../plates_villa/05_w055_villa.png"}, {"pos": 6, "wrap": "w054", "seg": "20260206000002-w054_2026020617", "r_mm": 12.16, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/06_w054.png", "size_px": [5420, 3720], "reading": "", "boxes": [], "src_photo": "../plates_photo/06_w054_photo.png", "src_villa": "../plates_villa/06_w054_villa.png"}, {"pos": 7, "wrap": "w053", "seg": "20260220000000-w053_2026022021", "r_mm": 12.07, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/07_w053.png", "size_px": [5040, 3620], "reading": "", "boxes": [], "src_photo": "../plates_photo/07_w053_photo.png", "src_villa": "../plates_villa/07_w053_villa.png"}, {"pos": 8, "wrap": "w052", "seg": "20260227000000-w052_2026022705", "r_mm": 11.82, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/08_w052.png", "size_px": [4750, 3740], "reading": "", "boxes": [], "src_photo": "../plates_photo/08_w052_photo.png", "src_villa": "../plates_villa/08_w052_villa.png"}, {"pos": 9, "wrap": "w051", "seg": "20260306000001-w051_2026030600", "r_mm": 11.69, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/09_w051.png", "size_px": [4670, 3680], "reading": "", "boxes": [], "src_photo": "../plates_photo/09_w051_photo.png", "src_villa": "../plates_villa/09_w051_villa.png"}, {"pos": 10, "wrap": "w050", "seg": "20260302000001-w050_2026030220", "r_mm": 11.53, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/10_w050.png", "size_px": [1890, 2580], "reading": "", "boxes": [], "src_photo": "../plates_photo/10_w050_photo.png", "src_villa": "../plates_villa/10_w050_villa.png"}, {"pos": 11, "wrap": "w049", "seg": "20260318000000-w049_20260318", "r_mm": 11.62, "n_clear": 7, "reviewed": true, "max_score": 0.9999, "src": "../plates/11_w049.png", "size_px": [4570, 2750], "reading": "published partial reading (supp. fig. 1): χωρὶϲ προνο[ί]α̣ϲ̣ · νοερόν (w49int)", "boxes": [[1076, 538, 538], [1076, 269, 538], [1345, 538, 538], [1345, 269, 538], [1345, 1883, 538], [1614, 538, 538], [807, 538, 538]], "src_photo": "../plates_photo/11_w049_photo.png", "src_villa": "../plates_villa/11_w049_villa.png"}, {"pos": 12, "wrap": "w048", "seg": "20260219000001-w048_2026021912", "r_mm": 11.59, "n_clear": 1, "reviewed": true, "max_score": 0.8321, "src": "../plates/12_w048.png", "size_px": [4140, 2780], "reading": "", "boxes": [[542, 271, 542]], "src_photo": "../plates_photo/12_w048_photo.png", "src_villa": "../plates_villa/12_w048_villa.png"}, {"pos": 13, "wrap": "w047", "seg": "20260206000001-w047_2026020613", "r_mm": 11.37, "n_clear": 12, "reviewed": true, "max_score": 0.997, "src": "../plates/13_w047.png", "size_px": [4100, 2840], "reading": "published partial reading (supp. fig. 1): καὶ πάν̣τ̣α̣ χωρὶϲ πόνων", "boxes": [[1365, 273, 546], [1638, 273, 546], [1638, 546, 546], [273, 546, 546], [546, 546, 546], [819, 546, 546], [1365, 546, 546], [1092, 546, 546], [1911, 1638, 546], [273, 273, 546], [0, 273, 546], [1092, 273, 546]], "src_photo": "../plates_photo/13_w047_photo.png", "src_villa": "../plates_villa/13_w047_villa.png"}, {"pos": 14, "wrap": "w046", "seg": "20260325000000-w046_20260325", "r_mm": 10.95, "n_clear": 8, "reviewed": true, "max_score": 0.9999, "src": "../plates/14_w046.png", "size_px": [4020, 2910], "reading": "", "boxes": [[1092, 1365, 546], [1092, 1092, 546], [1365, 1365, 546], [2184, 546, 546], [2184, 273, 546], [1365, 1092, 546], [2457, 546, 546], [1092, 1638, 546]], "src_photo": "../plates_photo/14_w046_photo.png", "src_villa": "../plates_villa/14_w046_villa.png"}, {"pos": 15, "wrap": "w045", "seg": "20260126000000-w045_2026012619", "r_mm": 10.92, "n_clear": 6, "reviewed": true, "max_score": 0.9997, "src": "../plates/15_w045.png", "size_px": [4010, 2910], "reading": "", "boxes": [[1088, 1360, 545], [1088, 1088, 545], [1360, 1360, 545], [1360, 1088, 545], [1088, 1632, 545], [816, 1088, 545]], "src_photo": "../plates_photo/15_w045_photo.png", "src_villa": "../plates_villa/15_w045_villa.png"}, {"pos": 16, "wrap": "w044", "seg": "20260115000000-w044_2026011522", "r_mm": 10.62, "n_clear": 14, "reviewed": true, "max_score": 0.9999, "src": "../plates/16_w044.png", "size_px": [3970, 2940], "reading": "", "boxes": [[1632, 1904, 544], [1088, 1904, 544], [816, 1904, 544], [1904, 1904, 544], [1088, 2176, 544], [1360, 1904, 544], [1632, 1632, 544], [2176, 1904, 544], [1088, 1632, 544], [544, 1904, 544], [1360, 2176, 544], [1632, 2176, 544], [1904, 1632, 544], [0, 1904, 544]], "src_photo": "../plates_photo/16_w044_photo.png", "src_villa": "../plates_villa/16_w044_villa.png"}, {"pos": 17, "wrap": "w043", "seg": "20260112000000-w043_2026011217", "r_mm": 10.43, "n_clear": 14, "reviewed": true, "max_score": 0.9997, "src": "../plates/17_w043.png", "size_px": [3950, 2970], "reading": "", "boxes": [[0, 0, 545], [272, 0, 545], [1904, 1904, 545], [1904, 1632, 545], [1632, 1904, 545], [272, 272, 545], [272, 544, 545], [1360, 1904, 545], [0, 272, 545], [544, 816, 545], [1360, 2176, 545], [2176, 2176, 545], [1904, 2176, 545], [1088, 2176, 545]], "src_photo": "../plates_photo/17_w043_photo.png", "src_villa": "../plates_villa/17_w043_villa.png"}, {"pos": 18, "wrap": "w042", "seg": "20260206000000-w042_2026020613", "r_mm": 10.25, "n_clear": 6, "reviewed": true, "max_score": 0.916, "src": "../plates/18_w042.png", "size_px": [3830, 2910], "reading": "", "boxes": [[1365, 2184, 547], [273, 546, 547], [1638, 2184, 547], [0, 2184, 547], [0, 546, 547], [273, 273, 547]], "src_photo": "../plates_photo/18_w042_photo.png", "src_villa": "../plates_villa/18_w042_villa.png"}, {"pos": 19, "wrap": "w041", "seg": "20260108000000-w041_2026010816", "r_mm": 10.15, "n_clear": 1, "reviewed": true, "max_score": 0.9927, "src": "../plates/19_w041.png", "size_px": [3900, 3010], "reading": "", "boxes": [[1644, 2192, 549]], "src_photo": "../plates_photo/19_w041_photo.png", "src_villa": "../plates_villa/19_w041_villa.png"}, {"pos": 20, "wrap": "w040", "seg": "20250831000000-w040_2025083102", "r_mm": 9.94, "n_clear": 4, "reviewed": true, "max_score": 0.887, "src": "../plates/20_w040.png", "size_px": [3880, 3110], "reading": "", "boxes": [[1390, 834, 556], [1112, 834, 556], [1112, 1390, 556], [1112, 1668, 556]], "src_photo": "../plates_photo/20_w040_photo.png", "src_villa": "../plates_villa/20_w040_villa.png"}, {"pos": 21, "wrap": "w039", "seg": "20260302000000-w039_2026030210", "r_mm": 9.73, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/21_w039.png", "size_px": [3750, 4160], "reading": "", "boxes": [], "src_photo": "../plates_photo/21_w039_photo.png", "src_villa": "../plates_villa/21_w039_villa.png"}, {"pos": 22, "wrap": "w038", "seg": "20260306000000-w038_2026030608", "r_mm": 9.57, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/22_w038.png", "size_px": [3620, 3010], "reading": "", "boxes": [], "src_photo": "../plates_photo/22_w038_photo.png", "src_villa": "../plates_villa/22_w038_villa.png"}, {"pos": 23, "wrap": "w037", "seg": "20260310000000-w037_2026031015", "r_mm": 9.36, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/23_w037.png", "size_px": [3500, 2980], "reading": "", "boxes": [], "src_photo": "../plates_photo/23_w037_photo.png", "src_villa": "../plates_villa/23_w037_villa.png"}, {"pos": 24, "wrap": "w036", "seg": "20260316000000-w036_2026031607", "r_mm": 9.26, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/24_w036.png", "size_px": [3390, 2910], "reading": "", "boxes": [], "src_photo": "../plates_photo/24_w036_photo.png", "src_villa": "../plates_villa/24_w036_villa.png"}, {"pos": 25, "wrap": "w035", "seg": "20260317000000-w035_2026031718", "r_mm": 9.19, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/25_w035.png", "size_px": [2550, 2830], "reading": "", "boxes": [], "src_photo": "../plates_photo/25_w035_photo.png", "src_villa": "../plates_villa/25_w035_villa.png"}, {"pos": 26, "wrap": "w034", "seg": "20260303000000-w034_2026030317", "r_mm": 9.04, "n_clear": 9, "reviewed": true, "max_score": 0.9964, "src": "../plates/26_w034.png", "size_px": [3750, 3420], "reading": "published partial reading (supp. fig. 1): καὶ τὸ κατ̣ὰ̣ φύϲιν", "boxes": [[1918, 2740, 549], [1644, 2740, 549], [2740, 1644, 549], [2192, 2740, 549], [2466, 1644, 549], [1918, 2466, 549], [822, 274, 549], [2466, 548, 549], [2466, 2740, 549]], "src_photo": "../plates_photo/26_w034_photo.png", "src_villa": "../plates_villa/26_w034_villa.png"}, {"pos": 27, "wrap": "w033", "seg": "20260219000000-w033_2026021913", "r_mm": 8.91, "n_clear": 0, "reviewed": true, "max_score": null, "src": "../plates/27_w033.png", "size_px": [3730, 3450], "reading": "", "boxes": [], "src_photo": "../plates_photo/27_w033_photo.png", "src_villa": "../plates_villa/27_w033_villa.png"}, {"pos": 28, "wrap": "w032", "seg": "20260203000000-w032_2026020303", "r_mm": 8.75, "n_clear": 0, "reviewed": true, "max_score": null, "src": "../plates/28_w032.png", "size_px": [3700, 3450], "reading": "", "boxes": [], "src_photo": "../plates_photo/28_w032_photo.png", "src_villa": "../plates_villa/28_w032_villa.png"}, {"pos": 29, "wrap": "w031", "seg": "20260130000000-w031_2026013019", "r_mm": 8.61, "n_clear": 0, "reviewed": true, "max_score": null, "src": "../plates/29_w031.png", "size_px": [3650, 3440], "reading": "", "boxes": [], "src_photo": "../plates_photo/29_w031_photo.png", "src_villa": "../plates_villa/29_w031_villa.png"}, {"pos": 30, "wrap": "w030", "seg": "20250108000005-w030_2025010818", "r_mm": 8.42, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/30_w030.png", "size_px": [3630, 3470], "reading": "", "boxes": [], "src_photo": "../plates_photo/30_w030_photo.png", "src_villa": "../plates_villa/30_w030_villa.png"}, {"pos": 31, "wrap": "w029", "seg": "20250108000004-w029_2025010827", "r_mm": 8.26, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/31_w029.png", "size_px": [3610, 3510], "reading": "", "boxes": [], "src_photo": "../plates_photo/31_w029_photo.png", "src_villa": "../plates_villa/31_w029_villa.png"}, {"pos": 32, "wrap": "w028", "seg": "20250108000003-w028_2025010836", "r_mm": 8.1, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/32_w028.png", "size_px": [3580, 3530], "reading": "", "boxes": [], "src_photo": "../plates_photo/32_w028_photo.png", "src_villa": "../plates_villa/32_w028_villa.png"}, {"pos": 33, "wrap": "w027", "seg": "20250108000002-w027_2025010845", "r_mm": 7.89, "n_clear": 0, "reviewed": true, "max_score": null, "src": "../plates/33_w027.png", "size_px": [3550, 3560], "reading": "", "boxes": [], "src_photo": "../plates_photo/33_w027_photo.png", "src_villa": "../plates_villa/33_w027_villa.png"}, {"pos": 34, "wrap": "w026", "seg": "20250108000001-w026_2025010854", "r_mm": 7.72, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/34_w026.png", "size_px": [3560, 3620], "reading": "", "boxes": [], "src_photo": "../plates_photo/34_w026_photo.png", "src_villa": "../plates_villa/34_w026_villa.png"}, {"pos": 35, "wrap": "w025", "seg": "20250108000000-w025_2025010863", "r_mm": 7.52, "n_clear": 2, "reviewed": true, "max_score": 0.9844, "src": "../plates/35_w025.png", "size_px": [3310, 3540], "reading": "published partial reading (supp. fig. 1): ἀόρατα", "boxes": [[1405, 562, 562], [1124, 562, 562]], "src_photo": "../plates_photo/35_w025_photo.png", "src_villa": "../plates_villa/35_w025_villa.png"}, {"pos": 36, "wrap": "w024", "seg": "20260215000000-w024_2026021572", "r_mm": 7.28, "n_clear": 5, "reviewed": true, "max_score": 0.9998, "src": "../plates/36_w024.png", "size_px": [3220, 3450], "reading": "", "boxes": [[282, 1410, 565], [564, 1410, 565], [564, 1692, 565], [846, 1692, 565], [846, 1410, 565]], "src_photo": "../plates_photo/36_w024_photo.png", "src_villa": "../plates_villa/36_w024_villa.png"}, {"pos": 37, "wrap": "w023", "seg": "20260311000000-w023_202603112281", "r_mm": 7.02, "n_clear": 0, "reviewed": true, "max_score": null, "src": "../plates/37_w023.png", "size_px": [3100, 3370], "reading": "", "boxes": [], "src_photo": "../plates_photo/37_w023_photo.png", "src_villa": "../plates_villa/37_w023_villa.png"}, {"pos": 38, "wrap": "title", "seg": "20260422000000-title_2026042222_zmid_flatboi", "r_mm": 5.5, "n_clear": 2, "reviewed": true, "max_score": 0.9609, "src": "../plates/38_title.png", "size_px": [2610, 870], "reading": "", "boxes": [[542, 271, 543], [813, 271, 543]], "src_photo": "../plates_photo/38_title_photo.png", "src_villa": "../plates_villa/38_title_villa.png"}];
-const el = document.getElementById("plates");
-el.innerHTML = PLATES.map(p => `
-  <div class="plate">
-    <div class="phead">
-      <span class="pos">${String(p.pos).padStart(2,"0")}</span>
-      <span class="w">${p.wrap}</span>
-      <span class="m">${p.reading?`<b style="color:var(--amber-h)">${p.reading}</b> · `:""}radius ${p.r_mm} mm · ${p.n_clear>0?`${p.n_clear} confirmed window${p.n_clear===1?"":"s"}${p.max_score?` · max score ${p.max_score.toFixed(4)}`:""}`:(p.reviewed?"reviewed, no confirmed legible window":"not yet human-reviewed")} · ${p.size_px[0]}×${p.size_px[1]}px full-res</span>
-    </div>
-    <div class="pimg"><div class="image-wrap">
-      <img alt="column ${p.wrap}" loading="lazy" data-p="${p.pos}">
-      <svg class="boxes" data-p="${p.pos}" viewBox="0 0 ${p.size_px[0]} ${p.size_px[1]}" aria-hidden="true">
-        ${(p.boxes || []).map(b => `<rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[2]}"></rect>`).join("")}
-      </svg>
-    </div></div>
-  </div>`).join("");
 
-const NOTES = {
-  photo: "Our approximation: CT surface texture (zarr volume, level-3, mid-depth layer) as a papyrus background, with the ink prediction alpha-blended in black on top (paper * (1 - 0.88*ink)). Same visual idea as the paper's Fig. 4 panel b, not a byte-verified match to their renderer -- no formula is published there. No boxes.",
-  villa: "Verified recipe: same texture background, ink composited with the published villa pipeline formula (opacity = smoothstep(ink, 0.42, 0.78) * 0.88, tint #101010 neutral carbon black, no glow) -- confirmed byte-for-byte against ScrollPrize/villa's foundation/scroll-unwrap-pipeline docs/RENDER-STYLE.md and configs/global.yaml. No boxes.",
-  ink: "Official ds8 ink map, contrast-stretch only (2-98 percentile), ink white on black. Amber boxes = windows confirmed legible.",
-};
-const URI_KEY = {photo: "src_photo", villa: "src_villa", ink: "src"};
-let style = "photo";
-function applyStyle(){
-  document.getElementById("stylenote").textContent = NOTES[style];
-  for (const k in URI_KEY) document.getElementById("tk-"+k).setAttribute("aria-pressed", style===k);
-  document.querySelectorAll(".pimg img").forEach(im => {
-    const p = PLATES[+im.dataset.p - 1];
-    im.src = p[URI_KEY[style]] || p.src;
-  });
-  document.querySelectorAll(".boxes").forEach(boxes => boxes.classList.toggle("hidden", style !== "ink"));
+@media (max-width:860px){
+  html,body{height:auto}
+  body{display:block;overflow:auto}
+  header{flex-direction:column;gap:.5rem;padding:.9rem 1rem}
+  h1{font-size:1.35rem}
+  .bar,.foot,.view{padding-left:.9rem;padding-right:.9rem}
+  main{display:block}
+  #rail{display:flex;gap:.4rem;overflow-x:auto;overflow-y:hidden;border-right:0;border-bottom:1px solid var(--line)}
+  .rail-h{display:none}
+  .item{grid-template-columns:1fr;width:5.6rem;flex:none;gap:.25rem}
+  .item img{width:4.9rem;height:3.4rem}
+  .item .s{display:none}
+  .keys{display:none}
+  .frame img{max-height:62vh}
 }
-for (const k in URI_KEY) document.getElementById("tk-"+k).addEventListener("click", ()=>{ style=k; applyStyle(); });
-applyStyle();
+</style>
 
-document.querySelectorAll(".pimg img").forEach(im => im.addEventListener("click", () => {
-  document.getElementById("lightimg").src = im.src;
-  document.getElementById("lightbox").classList.remove("hidden");
-}));
-document.getElementById("lightbox").addEventListener("click", () => document.getElementById("lightbox").classList.add("hidden"));
-document.addEventListener("keydown", e => { if(e.key==="Escape") document.getElementById("lightbox").classList.add("hidden"); });
+<header>
+  <div>
+    <h1>PHerc 0139 — <em>the columns, in reading order</em>
+      <span class="by">Leonel Wainer (LimeGS)</span>
+      <span class="by">Plates published on 2026-07-13</span></h1>
+    <p class="intro">Philodemus, <i>On Gods</i>, book 8: all <b>38 segmented wraps</b> of the scroll,
+    outermost to innermost — one wrap ≈ one column, so top to bottom of this list is the order of the text.
+    Before these pages the published text of PHerc 0139 was <b>its end title and five isolated phrases</b>
+    (marked on their columns); the other 33 columns carry no published reading.</p>
+  </div>
+  <nav class="links">
+    <a href="../README.md">Method</a>
+    <a href="https://scrollprize.org">Vesuvius Challenge</a>
+  </nav>
+</header>
+
+<main>
+  <aside id="rail" aria-label="columns, outer to inner"><div class="rail-h">outer ↓ inner</div></aside>
+  <section id="stage">
+    <div class="bar">
+      <span>
+        <span class="pos" id="pos"></span>
+        <span class="meta" id="meta"></span>
+        <span class="reading hidden" id="reading"></span>
+      </span>
+      <span>
+        <span class="nav"><button id="prev" title="previous column (←)">↑</button><button id="next" title="next column (→)">↓</button></span>
+        <span class="styles" role="group" aria-label="plate style">
+          <button id="tk-villa" aria-pressed="true" title="Papyrus texture + ink composited with the published villa-pipeline formula">papyrus</button>
+          <button id="tk-photo" aria-pressed="false" title="Papyrus texture + ink, our own composite approximation">papyrus (ours)</button>
+          <button id="tk-ink" aria-pressed="false" title="Official ds8 ink map, contrast-stretched">ink map</button>
+        </span>
+      </span>
+    </div>
+    <div class="view"><div class="frame" id="frame">
+      <img id="plate" alt="">
+      <svg class="boxes hidden" id="boxes" aria-hidden="true"></svg>
+    </div></div>
+    <div class="foot">
+      <span id="stylenote"></span>
+      <span class="keys"><span class="k">←/→</span> columns · <span class="k">1/2/3</span> style · <span class="k">click</span> full resolution</span>
+    </div>
+  </section>
+</main>
+
+<div class="lightbox hidden" id="lightbox"><img id="lightimg" alt=""></div>
+
+<script>
+const PLATES = [{"pos": 1, "wrap": "w059", "seg": "20250223000000-w059_2025022312", "r_mm": 13.26, "n_clear": 13, "reviewed": true, "max_score": 0.9392, "src": "../plates/01_w059.png", "size_px": [4870, 3510], "reading": "", "boxes": [[2208, 1104, 553], [2484, 2208, 553], [2484, 1932, 553], [1932, 1380, 553], [1932, 1656, 553], [2484, 1104, 553], [0, 2484, 553], [2208, 1656, 553], [2208, 1932, 553], [1380, 1656, 553], [2208, 828, 553], [2208, 1380, 553], [1656, 1932, 553]], "src_photo": "../plates_photo/01_w059_photo.png", "src_villa": "../plates_villa/01_w059_villa.png", "src_thumb": "../thumbs/01_w059.jpg"}, {"pos": 2, "wrap": "w058", "seg": "20260210000000-w058_2026021020", "r_mm": 13.05, "n_clear": 1, "reviewed": true, "max_score": 0.9882, "src": "../plates/02_w058.png", "size_px": [4800, 3650], "reading": "", "boxes": [[1662, 831, 554]], "src_photo": "../plates_photo/02_w058_photo.png", "src_villa": "../plates_villa/02_w058_villa.png", "src_thumb": "../thumbs/02_w058.jpg"}, {"pos": 3, "wrap": "w057", "seg": "20260127000000-w057_2026012713", "r_mm": 12.91, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/03_w057.png", "size_px": [4760, 3690], "reading": "", "boxes": [], "src_photo": "../plates_photo/03_w057_photo.png", "src_villa": "../plates_villa/03_w057_villa.png", "src_thumb": "../thumbs/03_w057.jpg"}, {"pos": 4, "wrap": "w056", "seg": "20260115000001-w056_2026011514", "r_mm": 12.79, "n_clear": 2, "reviewed": true, "max_score": 0.934, "src": "../plates/04_w056.png", "size_px": [4740, 3490], "reading": "", "boxes": [[3588, 2484, 552], [3864, 2484, 552]], "src_photo": "../plates_photo/04_w056_photo.png", "src_villa": "../plates_villa/04_w056_villa.png", "src_thumb": "../thumbs/04_w056.jpg"}, {"pos": 5, "wrap": "w055", "seg": "20251226000000-w055_2025122611", "r_mm": 12.48, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/05_w055.png", "size_px": [5070, 3750], "reading": "", "boxes": [], "src_photo": "../plates_photo/05_w055_photo.png", "src_villa": "../plates_villa/05_w055_villa.png", "src_thumb": "../thumbs/05_w055.jpg"}, {"pos": 6, "wrap": "w054", "seg": "20260206000002-w054_2026020617", "r_mm": 12.16, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/06_w054.png", "size_px": [5420, 3720], "reading": "", "boxes": [], "src_photo": "../plates_photo/06_w054_photo.png", "src_villa": "../plates_villa/06_w054_villa.png", "src_thumb": "../thumbs/06_w054.jpg"}, {"pos": 7, "wrap": "w053", "seg": "20260220000000-w053_2026022021", "r_mm": 12.07, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/07_w053.png", "size_px": [5040, 3620], "reading": "", "boxes": [], "src_photo": "../plates_photo/07_w053_photo.png", "src_villa": "../plates_villa/07_w053_villa.png", "src_thumb": "../thumbs/07_w053.jpg"}, {"pos": 8, "wrap": "w052", "seg": "20260227000000-w052_2026022705", "r_mm": 11.82, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/08_w052.png", "size_px": [4750, 3740], "reading": "", "boxes": [], "src_photo": "../plates_photo/08_w052_photo.png", "src_villa": "../plates_villa/08_w052_villa.png", "src_thumb": "../thumbs/08_w052.jpg"}, {"pos": 9, "wrap": "w051", "seg": "20260306000001-w051_2026030600", "r_mm": 11.69, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/09_w051.png", "size_px": [4670, 3680], "reading": "", "boxes": [], "src_photo": "../plates_photo/09_w051_photo.png", "src_villa": "../plates_villa/09_w051_villa.png", "src_thumb": "../thumbs/09_w051.jpg"}, {"pos": 10, "wrap": "w050", "seg": "20260302000001-w050_2026030220", "r_mm": 11.53, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/10_w050.png", "size_px": [1890, 2580], "reading": "", "boxes": [], "src_photo": "../plates_photo/10_w050_photo.png", "src_villa": "../plates_villa/10_w050_villa.png", "src_thumb": "../thumbs/10_w050.jpg"}, {"pos": 11, "wrap": "w049", "seg": "20260318000000-w049_20260318", "r_mm": 11.62, "n_clear": 7, "reviewed": true, "max_score": 0.9999, "src": "../plates/11_w049.png", "size_px": [4570, 2750], "reading": "published partial reading (supp. fig. 1): χωρὶϲ προνο[ί]α̣ϲ̣ · νοερόν (w49int)", "boxes": [[1076, 538, 538], [1076, 269, 538], [1345, 538, 538], [1345, 269, 538], [1345, 1883, 538], [1614, 538, 538], [807, 538, 538]], "src_photo": "../plates_photo/11_w049_photo.png", "src_villa": "../plates_villa/11_w049_villa.png", "src_thumb": "../thumbs/11_w049.jpg"}, {"pos": 12, "wrap": "w048", "seg": "20260219000001-w048_2026021912", "r_mm": 11.59, "n_clear": 1, "reviewed": true, "max_score": 0.8321, "src": "../plates/12_w048.png", "size_px": [4140, 2780], "reading": "", "boxes": [[542, 271, 542]], "src_photo": "../plates_photo/12_w048_photo.png", "src_villa": "../plates_villa/12_w048_villa.png", "src_thumb": "../thumbs/12_w048.jpg"}, {"pos": 13, "wrap": "w047", "seg": "20260206000001-w047_2026020613", "r_mm": 11.37, "n_clear": 12, "reviewed": true, "max_score": 0.997, "src": "../plates/13_w047.png", "size_px": [4100, 2840], "reading": "published partial reading (supp. fig. 1): καὶ πάν̣τ̣α̣ χωρὶϲ πόνων", "boxes": [[1365, 273, 546], [1638, 273, 546], [1638, 546, 546], [273, 546, 546], [546, 546, 546], [819, 546, 546], [1365, 546, 546], [1092, 546, 546], [1911, 1638, 546], [273, 273, 546], [0, 273, 546], [1092, 273, 546]], "src_photo": "../plates_photo/13_w047_photo.png", "src_villa": "../plates_villa/13_w047_villa.png", "src_thumb": "../thumbs/13_w047.jpg"}, {"pos": 14, "wrap": "w046", "seg": "20260325000000-w046_20260325", "r_mm": 10.95, "n_clear": 8, "reviewed": true, "max_score": 0.9999, "src": "../plates/14_w046.png", "size_px": [4020, 2910], "reading": "", "boxes": [[1092, 1365, 546], [1092, 1092, 546], [1365, 1365, 546], [2184, 546, 546], [2184, 273, 546], [1365, 1092, 546], [2457, 546, 546], [1092, 1638, 546]], "src_photo": "../plates_photo/14_w046_photo.png", "src_villa": "../plates_villa/14_w046_villa.png", "src_thumb": "../thumbs/14_w046.jpg"}, {"pos": 15, "wrap": "w045", "seg": "20260126000000-w045_2026012619", "r_mm": 10.92, "n_clear": 6, "reviewed": true, "max_score": 0.9997, "src": "../plates/15_w045.png", "size_px": [4010, 2910], "reading": "", "boxes": [[1088, 1360, 545], [1088, 1088, 545], [1360, 1360, 545], [1360, 1088, 545], [1088, 1632, 545], [816, 1088, 545]], "src_photo": "../plates_photo/15_w045_photo.png", "src_villa": "../plates_villa/15_w045_villa.png", "src_thumb": "../thumbs/15_w045.jpg"}, {"pos": 16, "wrap": "w044", "seg": "20260115000000-w044_2026011522", "r_mm": 10.62, "n_clear": 14, "reviewed": true, "max_score": 0.9999, "src": "../plates/16_w044.png", "size_px": [3970, 2940], "reading": "", "boxes": [[1632, 1904, 544], [1088, 1904, 544], [816, 1904, 544], [1904, 1904, 544], [1088, 2176, 544], [1360, 1904, 544], [1632, 1632, 544], [2176, 1904, 544], [1088, 1632, 544], [544, 1904, 544], [1360, 2176, 544], [1632, 2176, 544], [1904, 1632, 544], [0, 1904, 544]], "src_photo": "../plates_photo/16_w044_photo.png", "src_villa": "../plates_villa/16_w044_villa.png", "src_thumb": "../thumbs/16_w044.jpg"}, {"pos": 17, "wrap": "w043", "seg": "20260112000000-w043_2026011217", "r_mm": 10.43, "n_clear": 14, "reviewed": true, "max_score": 0.9997, "src": "../plates/17_w043.png", "size_px": [3950, 2970], "reading": "", "boxes": [[0, 0, 545], [272, 0, 545], [1904, 1904, 545], [1904, 1632, 545], [1632, 1904, 545], [272, 272, 545], [272, 544, 545], [1360, 1904, 545], [0, 272, 545], [544, 816, 545], [1360, 2176, 545], [2176, 2176, 545], [1904, 2176, 545], [1088, 2176, 545]], "src_photo": "../plates_photo/17_w043_photo.png", "src_villa": "../plates_villa/17_w043_villa.png", "src_thumb": "../thumbs/17_w043.jpg"}, {"pos": 18, "wrap": "w042", "seg": "20260206000000-w042_2026020613", "r_mm": 10.25, "n_clear": 6, "reviewed": true, "max_score": 0.916, "src": "../plates/18_w042.png", "size_px": [3830, 2910], "reading": "", "boxes": [[1365, 2184, 547], [273, 546, 547], [1638, 2184, 547], [0, 2184, 547], [0, 546, 547], [273, 273, 547]], "src_photo": "../plates_photo/18_w042_photo.png", "src_villa": "../plates_villa/18_w042_villa.png", "src_thumb": "../thumbs/18_w042.jpg"}, {"pos": 19, "wrap": "w041", "seg": "20260108000000-w041_2026010816", "r_mm": 10.15, "n_clear": 1, "reviewed": true, "max_score": 0.9927, "src": "../plates/19_w041.png", "size_px": [3900, 3010], "reading": "", "boxes": [[1644, 2192, 549]], "src_photo": "../plates_photo/19_w041_photo.png", "src_villa": "../plates_villa/19_w041_villa.png", "src_thumb": "../thumbs/19_w041.jpg"}, {"pos": 20, "wrap": "w040", "seg": "20250831000000-w040_2025083102", "r_mm": 9.94, "n_clear": 4, "reviewed": true, "max_score": 0.887, "src": "../plates/20_w040.png", "size_px": [3880, 3110], "reading": "", "boxes": [[1390, 834, 556], [1112, 834, 556], [1112, 1390, 556], [1112, 1668, 556]], "src_photo": "../plates_photo/20_w040_photo.png", "src_villa": "../plates_villa/20_w040_villa.png", "src_thumb": "../thumbs/20_w040.jpg"}, {"pos": 21, "wrap": "w039", "seg": "20260302000000-w039_2026030210", "r_mm": 9.73, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/21_w039.png", "size_px": [3750, 4160], "reading": "", "boxes": [], "src_photo": "../plates_photo/21_w039_photo.png", "src_villa": "../plates_villa/21_w039_villa.png", "src_thumb": "../thumbs/21_w039.jpg"}, {"pos": 22, "wrap": "w038", "seg": "20260306000000-w038_2026030608", "r_mm": 9.57, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/22_w038.png", "size_px": [3620, 3010], "reading": "", "boxes": [], "src_photo": "../plates_photo/22_w038_photo.png", "src_villa": "../plates_villa/22_w038_villa.png", "src_thumb": "../thumbs/22_w038.jpg"}, {"pos": 23, "wrap": "w037", "seg": "20260310000000-w037_2026031015", "r_mm": 9.36, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/23_w037.png", "size_px": [3500, 2980], "reading": "", "boxes": [], "src_photo": "../plates_photo/23_w037_photo.png", "src_villa": "../plates_villa/23_w037_villa.png", "src_thumb": "../thumbs/23_w037.jpg"}, {"pos": 24, "wrap": "w036", "seg": "20260316000000-w036_2026031607", "r_mm": 9.26, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/24_w036.png", "size_px": [3390, 2910], "reading": "", "boxes": [], "src_photo": "../plates_photo/24_w036_photo.png", "src_villa": "../plates_villa/24_w036_villa.png", "src_thumb": "../thumbs/24_w036.jpg"}, {"pos": 25, "wrap": "w035", "seg": "20260317000000-w035_2026031718", "r_mm": 9.19, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/25_w035.png", "size_px": [2550, 2830], "reading": "", "boxes": [], "src_photo": "../plates_photo/25_w035_photo.png", "src_villa": "../plates_villa/25_w035_villa.png", "src_thumb": "../thumbs/25_w035.jpg"}, {"pos": 26, "wrap": "w034", "seg": "20260303000000-w034_2026030317", "r_mm": 9.04, "n_clear": 9, "reviewed": true, "max_score": 0.9964, "src": "../plates/26_w034.png", "size_px": [3750, 3420], "reading": "published partial reading (supp. fig. 1): καὶ τὸ κατ̣ὰ̣ φύϲιν", "boxes": [[1918, 2740, 549], [1644, 2740, 549], [2740, 1644, 549], [2192, 2740, 549], [2466, 1644, 549], [1918, 2466, 549], [822, 274, 549], [2466, 548, 549], [2466, 2740, 549]], "src_photo": "../plates_photo/26_w034_photo.png", "src_villa": "../plates_villa/26_w034_villa.png", "src_thumb": "../thumbs/26_w034.jpg"}, {"pos": 27, "wrap": "w033", "seg": "20260219000000-w033_2026021913", "r_mm": 8.91, "n_clear": 0, "reviewed": true, "max_score": null, "src": "../plates/27_w033.png", "size_px": [3730, 3450], "reading": "", "boxes": [], "src_photo": "../plates_photo/27_w033_photo.png", "src_villa": "../plates_villa/27_w033_villa.png", "src_thumb": "../thumbs/27_w033.jpg"}, {"pos": 28, "wrap": "w032", "seg": "20260203000000-w032_2026020303", "r_mm": 8.75, "n_clear": 0, "reviewed": true, "max_score": null, "src": "../plates/28_w032.png", "size_px": [3700, 3450], "reading": "", "boxes": [], "src_photo": "../plates_photo/28_w032_photo.png", "src_villa": "../plates_villa/28_w032_villa.png", "src_thumb": "../thumbs/28_w032.jpg"}, {"pos": 29, "wrap": "w031", "seg": "20260130000000-w031_2026013019", "r_mm": 8.61, "n_clear": 0, "reviewed": true, "max_score": null, "src": "../plates/29_w031.png", "size_px": [3650, 3440], "reading": "", "boxes": [], "src_photo": "../plates_photo/29_w031_photo.png", "src_villa": "../plates_villa/29_w031_villa.png", "src_thumb": "../thumbs/29_w031.jpg"}, {"pos": 30, "wrap": "w030", "seg": "20250108000005-w030_2025010818", "r_mm": 8.42, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/30_w030.png", "size_px": [3630, 3470], "reading": "", "boxes": [], "src_photo": "../plates_photo/30_w030_photo.png", "src_villa": "../plates_villa/30_w030_villa.png", "src_thumb": "../thumbs/30_w030.jpg"}, {"pos": 31, "wrap": "w029", "seg": "20250108000004-w029_2025010827", "r_mm": 8.26, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/31_w029.png", "size_px": [3610, 3510], "reading": "", "boxes": [], "src_photo": "../plates_photo/31_w029_photo.png", "src_villa": "../plates_villa/31_w029_villa.png", "src_thumb": "../thumbs/31_w029.jpg"}, {"pos": 32, "wrap": "w028", "seg": "20250108000003-w028_2025010836", "r_mm": 8.1, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/32_w028.png", "size_px": [3580, 3530], "reading": "", "boxes": [], "src_photo": "../plates_photo/32_w028_photo.png", "src_villa": "../plates_villa/32_w028_villa.png", "src_thumb": "../thumbs/32_w028.jpg"}, {"pos": 33, "wrap": "w027", "seg": "20250108000002-w027_2025010845", "r_mm": 7.89, "n_clear": 0, "reviewed": true, "max_score": null, "src": "../plates/33_w027.png", "size_px": [3550, 3560], "reading": "", "boxes": [], "src_photo": "../plates_photo/33_w027_photo.png", "src_villa": "../plates_villa/33_w027_villa.png", "src_thumb": "../thumbs/33_w027.jpg"}, {"pos": 34, "wrap": "w026", "seg": "20250108000001-w026_2025010854", "r_mm": 7.72, "n_clear": 0, "reviewed": false, "max_score": null, "src": "../plates/34_w026.png", "size_px": [3560, 3620], "reading": "", "boxes": [], "src_photo": "../plates_photo/34_w026_photo.png", "src_villa": "../plates_villa/34_w026_villa.png", "src_thumb": "../thumbs/34_w026.jpg"}, {"pos": 35, "wrap": "w025", "seg": "20250108000000-w025_2025010863", "r_mm": 7.52, "n_clear": 2, "reviewed": true, "max_score": 0.9844, "src": "../plates/35_w025.png", "size_px": [3310, 3540], "reading": "published partial reading (supp. fig. 1): ἀόρατα", "boxes": [[1405, 562, 562], [1124, 562, 562]], "src_photo": "../plates_photo/35_w025_photo.png", "src_villa": "../plates_villa/35_w025_villa.png", "src_thumb": "../thumbs/35_w025.jpg"}, {"pos": 36, "wrap": "w024", "seg": "20260215000000-w024_2026021572", "r_mm": 7.28, "n_clear": 5, "reviewed": true, "max_score": 0.9998, "src": "../plates/36_w024.png", "size_px": [3220, 3450], "reading": "", "boxes": [[282, 1410, 565], [564, 1410, 565], [564, 1692, 565], [846, 1692, 565], [846, 1410, 565]], "src_photo": "../plates_photo/36_w024_photo.png", "src_villa": "../plates_villa/36_w024_villa.png", "src_thumb": "../thumbs/36_w024.jpg"}, {"pos": 37, "wrap": "w023", "seg": "20260311000000-w023_202603112281", "r_mm": 7.02, "n_clear": 0, "reviewed": true, "max_score": null, "src": "../plates/37_w023.png", "size_px": [3100, 3370], "reading": "", "boxes": [], "src_photo": "../plates_photo/37_w023_photo.png", "src_villa": "../plates_villa/37_w023_villa.png", "src_thumb": "../thumbs/37_w023.jpg"}, {"pos": 38, "wrap": "title", "seg": "20260422000000-title_2026042222_zmid_flatboi", "r_mm": 5.5, "n_clear": 2, "reviewed": true, "max_score": 0.9609, "src": "../plates/38_title.png", "size_px": [2610, 870], "reading": "", "boxes": [[542, 271, 543], [813, 271, 543]], "src_photo": "../plates_photo/38_title_photo.png", "src_villa": "../plates_villa/38_title_villa.png", "src_thumb": "../thumbs/38_title.jpg"}];
+const $ = id => document.getElementById(id);
+const KEYS = {villa: "src_villa", photo: "src_photo", ink: "src"};
+const NOTES = {
+  villa: "villa-pipeline composite of the official ds8 ink map on the CT surface texture",
+  photo: "our own composite of the same ink map on the CT surface texture",
+  ink: "official ds8 ink map, contrast-stretched — amber boxes = windows confirmed legible by eye",
+};
+let style = "villa", cur = 0;
+
+$("rail").insertAdjacentHTML("beforeend", PLATES.map((p, i) => `
+  <button class="item" data-i="${i}" aria-current="false">
+    <img src="${p.src_thumb}" alt="" loading="lazy">
+    <span>
+      <span class="n">${String(p.pos).padStart(2,"0")}</span><span class="w">${p.wrap}</span>
+      <span class="s"><span class="dot ${p.n_clear?"":"off"}"></span>${
+        p.n_clear ? p.n_clear + " window" + (p.n_clear===1?"":"s")
+                  : (p.reviewed ? "none legible" : "unreviewed")
+      }${p.reading ? ' <span class="quote">·&nbsp;phrase</span>' : ""}</span>
+    </span>
+  </button>`).join(""));
+
+function show(i){
+  cur = Math.max(0, Math.min(PLATES.length - 1, i));
+  const p = PLATES[cur];
+  $("pos").textContent = `${String(p.pos).padStart(2,"0")}/${PLATES.length}  ${p.wrap}`;
+  $("meta").innerHTML = [
+    `radius <b>${p.r_mm} mm</b>`,
+    p.n_clear ? `<b>${p.n_clear}</b> confirmed window${p.n_clear===1?"":"s"}${p.max_score?` · max ${p.max_score.toFixed(3)}`:""}`
+              : (p.reviewed ? "reviewed, none legible" : "not yet human-reviewed"),
+    `<b>${p.size_px[0]}×${p.size_px[1]}</b> px`,
+  ].join("<i>·</i>");
+  const r = $("reading");
+  // the title column is the control: it is the one text already read officially
+  const label = p.reading.replace(/^published partial reading \(supp\. fig\. 1\): /, "published: ")
+    || (p.wrap === "title" ? "published control: Φιλοδήμου περὶ θεῶν Η" : "");
+  r.classList.toggle("hidden", !label);
+  r.textContent = label;
+  $("prev").disabled = cur === 0;
+  $("next").disabled = cur === PLATES.length - 1;
+
+  const img = $("plate");
+  img.classList.remove("on");
+  img.alt = `column ${p.wrap}, ${NOTES[style]}`;
+  img.src = p[KEYS[style]] || p.src;
+  const svg = $("boxes");
+  svg.setAttribute("viewBox", `0 0 ${p.size_px[0]} ${p.size_px[1]}`);
+  svg.innerHTML = (p.boxes || []).map(b => `<rect x="${b[0]}" y="${b[1]}" width="${b[2]}" height="${b[2]}"/>`).join("");
+  svg.classList.toggle("hidden", style !== "ink" || !p.boxes.length);
+
+  document.querySelectorAll(".item").forEach((el, j) => {
+    el.setAttribute("aria-current", j === cur);
+    if (j === cur) el.scrollIntoView({block: "nearest"});
+  });
+  history.replaceState(null, "", "#" + p.wrap);
+}
+
+$("plate").addEventListener("load", () => {
+  $("plate").classList.add("on");
+  // ponytail: warm the next column only; full prefetch would pull ~285 MB
+  const nxt = PLATES[cur + 1];
+  if (nxt) new Image().src = nxt[KEYS[style]] || nxt.src;
+});
+
+function setStyle(k){
+  style = k;
+  for (const s in KEYS) $("tk-" + s).setAttribute("aria-pressed", s === k);
+  $("stylenote").textContent = NOTES[k];
+  show(cur);
+}
+for (const k in KEYS) $("tk-" + k).addEventListener("click", () => setStyle(k));
+$("rail").addEventListener("click", e => {
+  const it = e.target.closest(".item");
+  if (it) show(+it.dataset.i);
+});
+$("prev").addEventListener("click", () => show(cur - 1));
+$("next").addEventListener("click", () => show(cur + 1));
+
+const lb = $("lightbox");
+$("plate").addEventListener("click", e => {
+  const r = e.target.getBoundingClientRect();
+  const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+  const full = $("lightimg");
+  full.src = $("plate").src;
+  lb.classList.remove("hidden");
+  // open the full-resolution view centred on whatever the reader clicked
+  const centre = () => lb.scrollTo(fx * full.width - lb.clientWidth / 2,
+                                   fy * full.height - lb.clientHeight / 2);
+  full.complete ? centre() : full.addEventListener("load", centre, {once: true});
+});
+lb.addEventListener("click", () => lb.classList.add("hidden"));
+document.addEventListener("keydown", e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === "Escape") return lb.classList.add("hidden");
+  if (e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "k") show(cur - 1);
+  else if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "j") show(cur + 1);
+  else if (e.key === "Home") show(0);
+  else if (e.key === "End") show(PLATES.length - 1);
+  else if ("123".includes(e.key)) setStyle(["villa", "photo", "ink"][+e.key - 1]);
+  else return;
+  e.preventDefault();
+});
+
+// keep the plate inside the viewport: measure the chrome instead of guessing it
+const fit = () => document.documentElement.style.setProperty("--chrome",
+  document.querySelector("header").offsetHeight + document.querySelector(".bar").offsetHeight
+  + document.querySelector(".foot").offsetHeight + 40 + "px");
+addEventListener("resize", fit);
+fit();
+
+const start = PLATES.findIndex(p => "#" + p.wrap === location.hash);
+setStyle(style);
+show(start < 0 ? 0 : start);
 </script>
