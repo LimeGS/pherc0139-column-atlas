@@ -25,6 +25,7 @@ import json
 import math
 import os
 import re
+import statistics
 import sys
 
 import numpy as np
@@ -35,7 +36,27 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from vesuvius_data import ls, download  # noqa: E402
 
 def reading_from_radial(path):
-    """Outer-to-inner wraps derived from P8's measured mean radii."""
+    """Outer-to-inner wraps, from the segmentation's own numbering, checked
+    against P8's measured radii.
+
+    The order is `wNNN` descending -- outer to inner -- and the title last. It
+    is *not* a sort by mean radius, and the difference is not academic: sorting
+    38 wraps by `r_mean` reorders three of them, and the differences it decides
+    on are 9 and 26 units against distributions 2013 units wide from p10 to p90.
+    The wraps overlap so heavily that the mean cannot separate neighbours; what
+    it can do is confirm the trend across the whole scroll, which it does in 35
+    of 36 consecutive pairs.
+
+    So the radii are a check, not the key. A measurement that disagrees with the
+    numbering by more than a typical wrap-to-wrap step is a real disagreement
+    and stops the run; one that disagrees by less is the noise this docstring is
+    about.
+
+    An earlier version of this file sorted by r_mean and published plates whose
+    numbering had moved. A hardcoded reading list before that was not, as its
+    replacement's commit message claimed, a second answer to the same question:
+    it was this answer, written down.
+    """
     try:
         payload = json.loads(open(path).read())
     except (OSError, json.JSONDecodeError) as exc:
@@ -43,27 +64,45 @@ def reading_from_radial(path):
     segments = payload.get("segments") if isinstance(payload, dict) else None
     if not isinstance(segments, dict) or not segments:
         raise RuntimeError("measured wrap order has no segments")
-    measured = []
-    seen = set()
-    for segment, statistics in segments.items():
+
+    radii = {}
+    for segment, stats in segments.items():
         match = re.search(r"-(w\d+|title)_", str(segment))
         if not match:
             continue
         wrap = match.group(1)
-        if wrap in seen:
+        if wrap in radii:
             raise RuntimeError(f"duplicate wrap {wrap} in measured order")
-        seen.add(wrap)
         try:
-            radius = float(statistics["r_mean"])
+            radius = float(stats["r_mean"])
         except (KeyError, TypeError, ValueError) as exc:
             raise RuntimeError(f"wrap {wrap} has no numeric r_mean") from exc
         if not math.isfinite(radius):
             raise RuntimeError(f"wrap {wrap} has non-finite r_mean")
-        measured.append((radius, wrap))
-    if not measured:
+        radii[wrap] = radius
+    if not radii:
         raise RuntimeError("measured wrap order contains no named wraps")
-    measured.sort(key=lambda item: (-item[0], item[1]))
-    return [wrap for _radius, wrap in measured]
+
+    numbered = sorted((w for w in radii if w != "title"),
+                      key=lambda w: -int(w[1:]))
+    if not numbered:
+        raise RuntimeError("measured wrap order names no numbered wraps")
+
+    # What one step between neighbours normally is, measured here rather than
+    # assumed: the median of the steps the numbering implies.
+    steps = [radii[a] - radii[b] for a, b in zip(numbered, numbered[1:])]
+    typical = statistics.median(abs(step) for step in steps)
+    for a, b in zip(numbered, numbered[1:]):
+        step = radii[a] - radii[b]
+        if step < 0 and abs(step) > typical:
+            raise RuntimeError(
+                f"{a} measures {abs(step):.1f} smaller than {b}, which is more "
+                f"than a typical wrap-to-wrap step ({typical:.1f}). The "
+                f"numbering and the radii disagree about which is further out; "
+                f"one of them is wrong and this cannot choose.")
+
+    order = numbered + (["title"] if "title" in radii else [])
+    return order
 
 
 def stretch(a):
@@ -77,7 +116,8 @@ def main():
     ap.add_argument("--work", default="work_maps")
     ap.add_argument("--scroll", default="PHerc0139")
     ap.add_argument("--order", required=True,
-                    help="P8 wrap_radial.json; plates follow descending r_mean")
+                    help="P8 wrap_radial.json; the numbering gives the order and "
+                         "these radii check it")
     args = ap.parse_args()
     if os.path.isdir(args.out) and os.listdir(args.out):
         raise RuntimeError(
