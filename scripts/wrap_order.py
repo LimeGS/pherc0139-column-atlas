@@ -70,17 +70,17 @@ def main():
         labels.append(seg)
         print(f"  {i+1}/{len(segs)} {seg} ok ({len(pts)} pts validos)")
 
-    # Todos los meshes deben referenciar el mismo volumen para que las
-    # coordenadas sean comparables. En PHerc0139 (2026-07) lo son.
+    # Every mesh must reference the same volume for the
+    # coordinates to be comparable. In PHerc0139 (2026-07) they are.
     print("volumenes referenciados:", vol_refs)
     if len(vol_refs) > 1:
-        print("ADVERTENCIA: mas de un volumen — los radios NO son comparables entre grupos")
+        print("WARNING: more than one volume -- radii are NOT comparable across groups")
 
     allpts = np.concatenate(clouds)
     mu = allpts.mean(axis=0)
     _, S, Vt = np.linalg.svd(allpts - mu, full_matrices=False)
     axis = Vt[0]
-    print("varianza global por componente:", (S**2 / np.sum(S**2)).round(4))
+    print("global variance per component:", (S**2 / np.sum(S**2)).round(4))
 
     out = {}
     for seg, pts in zip(labels, clouds):
